@@ -1,0 +1,33 @@
+.form
+  display: flex
+  flex-direction: column
+  gap: 15px
+
+  .tableContainer
+    border: 1px solid lightgray
+    border-radius: 15px
+    width: 100%
+    overflow-y: auto
+
+    .namesTable
+      border-collapse: collapse
+
+      tr:last-child td
+        border-bottom: none
+
+      th, td
+        border-bottom: 1px dotted lightgray
+        border-right: 1px dotted lightgray
+
+        width: 100%
+
+        &:last-child
+          border-right: none
+
+        input
+          width: 100%
+          padding: 0.5rem 1rem
+
+          background-color: transparent
+          border: none
+          outline: none
