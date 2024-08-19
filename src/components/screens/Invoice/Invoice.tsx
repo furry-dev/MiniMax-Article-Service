@@ -17,6 +17,7 @@ export interface InvoiceEntity {
 
 
 export default function Invoice({invoice}: { invoice: InvoiceEntity }) {
+    const [invoiceId, setInvoiceId] = useState(invoice._id)
     const [editedNames, setEditedNames] = useState<ArticleEntity[]>(invoice.articles)
 
     const handleNameChange = (index: number, e: ChangeEvent<HTMLInputElement>) => {
@@ -50,6 +51,8 @@ export default function Invoice({invoice}: { invoice: InvoiceEntity }) {
         try {
             if (invoice._id === "new") {
 
+                setInvoiceId(Math.floor(Math.random() * (99 - 10 + 1) + 10).toString())
+
                 console.log("adding new invoice", names)
 
             } else {
@@ -64,12 +67,20 @@ export default function Invoice({invoice}: { invoice: InvoiceEntity }) {
 
     return (
         <main>
+            {invoiceId !== "new" && <h1>{invoiceId}</h1>}
             <form className={styles.form} onSubmit={submitHandler} onKeyDown={onKeyDown}>
                 <div className={styles.tableContainer}>
                     <table className={styles.namesTable}>
+                        <colgroup>
+                            <col span={1} style={{width: "120px"}}/>
+                            <col span={1} style={{width: "calc(100vw - 220px)"}}/>
+                            <col span={1} style={{width: "100px"}}/>
+                        </colgroup>
+
                         <thead>
                             <tr>
                                 <th>Артикул</th>
+                                <th>Назва</th>
                                 <th>Статус</th>
                             </tr>
                         </thead>
@@ -83,6 +94,9 @@ export default function Invoice({invoice}: { invoice: InvoiceEntity }) {
                                             data-index={index}
                                             onChange={(e) => handleNameChange(index, e)}
                                         />
+                                    </td>
+                                    <td>
+                                    (Назва)
                                     </td>
                                     <td>
                                         <StatusBtn/>
