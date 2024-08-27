@@ -1,0 +1,59 @@
+.form
+  display: flex
+  flex-direction: column
+  gap: 15px
+
+  .meta
+    display: flex
+    flex-direction: column
+    gap: 10px
+
+    padding: 0 15px
+
+  .tableContainer
+    border-top: 1px solid #3c4144
+    border-bottom: 1px solid #3c4144
+    width: 100%
+    overflow-y: auto
+
+    .namesTable
+      border-collapse: collapse
+      table-layout: auto
+
+      .invalid
+        background-color: #ff4b4b
+
+
+      tr:last-child td
+        border-bottom: none
+
+      th
+        padding: 5px
+
+      th, td
+        border-bottom: 1px dotted #3c4144
+        border-right: 1px dotted #3c4144
+
+        &:last-child
+          border-right: none
+
+        &.name
+          padding: 0 0.5rem
+
+        input
+          width: 100%
+          padding: 0.5rem 1rem
+
+          color: white
+
+          background-color: transparent
+          border: none
+          outline: none
+
+          &[type="number"]
+            -moz-appearance: textfield
+
+            &::-webkit-outer-spin-button, &::-webkit-inner-spin-button
+              -webkit-appearance: none
+              margin: 0
+

@@ -1,0 +1,40 @@
+\:root
+  --nav-width: 100px
+
+*
+  box-sizing: border-box
+  padding: 0
+  margin: 0
+
+
+html,
+body
+  max-width: 100vw
+  overflow-x: hidden
+
+
+body
+  color: #ccc
+  background: #0a0b0b
+
+
+  display: flex
+  flex-direction: column
+  min-height: 100vh
+
+  padding-left: var(--nav-width)
+
+main
+  flex: 1 1 auto
+
+  padding: 20px
+
+a
+  color: inherit
+  text-decoration: none
+
+
+@media (max-width: 480px)
+  body
+    padding-left: 0
+    padding-top: var(--nav-height)

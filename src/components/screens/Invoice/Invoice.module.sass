@@ -1,31 +1,24 @@
-.form
+.main
   display: flex
-  flex-direction: column
-  gap: 15px
 
-  .tableContainer
-    border: 1px solid lightgray
-    border-radius: 15px
-    width: 100%
-    overflow-y: auto
+  gap: 20px
 
-    .namesTable
-      border-collapse: collapse
+  .list
+    flex: 1 1 auto
 
-      tr:last-child td
-        border-bottom: none
+  .form
+    flex: 0 1 500px
 
-      th, td
-        border-bottom: 1px dotted lightgray
-        border-right: 1px dotted lightgray
 
-        &:last-child
-          border-right: none
+@media (max-width: 880px)
+  .form
+    background-color: #0a0b0b
 
-        input
-          width: 100%
-          padding: 0.5rem 1rem
+    position: fixed
 
-          background-color: transparent
-          border: none
-          outline: none
+    left: 0
+    top: var(--nav-height)
+    right: 0
+    bottom: 0
+
+    padding: 15px 0

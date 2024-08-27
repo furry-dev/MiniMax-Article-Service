@@ -1,21 +1,25 @@
 "use client"
 
-import React, {useState} from "react"
+import React from "react"
 
 import styles from "./StatusBtn.module.sass"
+import {ProductStatus} from "@/utils/InvoiceManager/Invoice.interfaces"
 
-const STATUS_LIST = [
-    {text: "Збирається", color: "red"},
-    {text: "Зібрано", color: "orange"},
-    {text: "Видано", color: "green"}
+const STATUS_LIST: { state: ProductStatus, text: string, color: string }[] = [
+    {state: "Assembly", text: "Збирається", color: "red"},
+    {state: "Assembled", text: "Зібрано", color: "orange"},
+    {state: "Delivered", text: "Видано", color: "green"}
 ]
 
 
-export default function StatusBtn() {
-    const [status, setStatus] = useState(0)
+export default function StatusBtn({status, setStatus}: {
+    status: ProductStatus,
+    setStatus: (status: ProductStatus) => void
+}) {
+    const currentIndex = STATUS_LIST.findIndex(value => value.state === status)
 
-    const onButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setStatus(prevState => (prevState + 1) % STATUS_LIST.length)
+    const onButtonClick = () => {
+        setStatus(STATUS_LIST[(currentIndex + 1) % STATUS_LIST.length].state)
     }
 
     return (
@@ -23,9 +27,9 @@ export default function StatusBtn() {
             className={styles.button}
             type={"button"}
             onClick={onButtonClick}
-            style={{background: STATUS_LIST[status].color}}
+            style={{background: STATUS_LIST[currentIndex].color}}
         >
-            {STATUS_LIST[status]?.text}
+            {STATUS_LIST[currentIndex]?.text}
         </button>
     )
 }
