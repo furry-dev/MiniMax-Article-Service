@@ -12,8 +12,12 @@ export interface ProductEntity {
 }
 
 export interface InvoiceEntity {
-    id: number,
-    locked: boolean,
     name: string,
-    products: ProductEntity[]
+    products?: ProductEntity[],
+    createdAt: string,
+    closedAt?: string,
+}
+
+export interface InvoiceWithId extends InvoiceEntity {
+    id: string
 }

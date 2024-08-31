@@ -1,13 +1,13 @@
 import React from "react"
-import Link from "next/link"
 
 import styles from "./Home.module.sass"
 import InvoicesList from "@/components/screens/Home/InvoicesList/InvoicesList"
+import NewInvoiceBtn from "@/components/screens/Home/InvoicesList/NewInvoiceBtn/NewInvoiceBtn"
 
 function Home() {
     return (
         <main>
-            <Link href={"/invoice/new"} className={styles.addButton}>+</Link>
+            <NewInvoiceBtn className={styles.addBtn}/>
             <InvoicesList/>
         </main>
     )

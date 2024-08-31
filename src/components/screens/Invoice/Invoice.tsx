@@ -1,49 +1,50 @@
+"use client"
+
 import InvoicesList from "@/components/screens/Home/InvoicesList/InvoicesList"
 import InvoiceForm from "@/components/screens/Invoice/InvoiceForm/InvoiceForm"
-import {InvoiceEntity} from "@/utils/InvoiceManager/Invoice.interfaces"
 
 import styles from "./Invoice.module.sass"
+import NewInvoiceBtn from "@/components/screens/Home/InvoicesList/NewInvoiceBtn/NewInvoiceBtn"
+import {useEffect, useState} from "react"
+import {InvoiceWithId} from "@/utils/InvoiceManager/Invoice.interfaces"
+import {InvoiceManager} from "@/utils/InvoiceManager/InvoiceManager"
+import toast from "react-hot-toast"
+import {useRouter} from "next/navigation"
 
-export default function Invoice({invoiceId}: { invoiceId: number }) {
-    const invoice: InvoiceEntity = {
-        id: 4,
-        locked: false,
-        name: "004",
-        products: [
+export default function Invoice({invoiceId}: { invoiceId: string }) {
+    const [invoice, setInvoice] = useState<InvoiceWithId | null>(null)
+
+    const router = useRouter()
+
+    useEffect(() => {
+        return InvoiceManager.subscribeToInvoiceById(invoiceId, setInvoice)
+    }, [invoiceId])
+
+    const closeInvoiceHandler = () => {
+        toast.promise(
+            InvoiceManager.closeInvoice(invoiceId),
             {
-                article: 1007,
-                title: "Плитка",
-                count: 10,
-                status: "Assembled"
-            },
-            {
-                article: 1008,
-                title: "Краска",
-                count: 3,
-                status: "Delivered"
-            },
-            {
-                article: 1009,
-                title: "Шпатлёвка",
-                count: 1,
-                status: "Assembly"
-            },
-            {
-                article: 1010,
-                title: "Цемент",
-                count: 4,
-                status: "Assembled"
+                loading: "Закривається...",
+                success: "Успішно!",
+                error: "Не вдалося закрити накладну!"
             }
-        ]
+        ).then(() => router.push("/"))
     }
 
     return (
         <main className={styles.main}>
             <div className={styles.list}>
                 <InvoicesList/>
+                <NewInvoiceBtn className={styles.addButton}/>
             </div>
             <div className={styles.form}>
-                <InvoiceForm invoice={invoice}/>
+                {invoice && <InvoiceForm invoice={invoice}/>}
+                <button
+                    className={styles.closeInvoiceBtn}
+                    onClick={closeInvoiceHandler}
+                >
+                    Закрити накладну
+                </button>
             </div>
         </main>
     )

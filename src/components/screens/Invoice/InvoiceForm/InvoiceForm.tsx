@@ -1,15 +1,20 @@
 "use client"
 
 import styles from "./InvoiceForm.module.sass"
-import {InvoiceEntity, ProductEntity, ProductStatus} from "@/utils/InvoiceManager/Invoice.interfaces"
+import {InvoiceWithId, ProductEntity, ProductStatus} from "@/utils/InvoiceManager/Invoice.interfaces"
 import StatusBtn from "@/components/screens/Invoice/StatusBtn/StatusBtn"
 import {useEffect, useState} from "react"
+import {InvoiceManager} from "@/utils/InvoiceManager/InvoiceManager"
 
-export default function InvoiceForm({invoice}: { invoice: InvoiceEntity }) {
-    const [products, setProducts] = useState<ProductEntity[]>([
-        ...invoice.products,
-        {article: 0, title: "", count: 1, status: "Assembly"}
-    ])
+export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
+    const [products, setProducts] = useState<ProductEntity[]>(invoice.products || [])
+
+    useEffect(() => {
+        setProducts([
+            ...(invoice.products || []),
+            {article: 0, title: "", count: 1, status: "Assembly"}
+        ])
+    }, [invoice])
 
     const [invalidFields, setInvalidFields] = useState<number[]>([])
 
@@ -22,17 +27,8 @@ export default function InvoiceForm({invoice}: { invoice: InvoiceEntity }) {
 
         if (invalidIndexes.length > 0) return
 
-        // const saveProductsToFirebase = async () => {
-        //     try {
-        //         const docRef = doc(db, "invoices", invoice.id); // Путь к документу
-        //         await setDoc(docRef, { products }, { merge: true }); // Сохранение данных
-        //     } catch (error) {
-        //         console.error("Ошибка сохранения данных в Firebase:", error);
-        //     }
-        // };
-        //
-        // saveProductsToFirebase();
-    }, [products])
+        InvoiceManager.updateInvoiceProducts(invoice.id, products.filter(value => value.article > 0))
+    }, [invoice.id, products])
 
     const setStatus = (index: number, status: ProductStatus) => {
         setProducts(prevProducts =>
@@ -48,13 +44,9 @@ export default function InvoiceForm({invoice}: { invoice: InvoiceEntity }) {
                 i === index ? {...product, [field]: value} : product
             )
 
-            console.log(field, value)
-
             if (field === "article" && value === "") {
                 updatedProducts = updatedProducts.filter((_, i) => i !== index)
             }
-
-            console.log(updatedProducts)
 
             const lastProduct = updatedProducts[updatedProducts.length - 1]
             if (lastProduct.article) {
@@ -111,7 +103,7 @@ export default function InvoiceForm({invoice}: { invoice: InvoiceEntity }) {
         >
             <div className={styles.meta}>
                 <h2>{invoice.name} | <small>id: {invoice.id}</small></h2>
-                <span>Всього позицій: {invoice.products.length}</span>
+                <span>Всього позицій: {invoice.products?.length || 0}</span>
             </div>
 
             <div className={styles.tableContainer}>

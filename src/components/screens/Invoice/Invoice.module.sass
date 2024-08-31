@@ -6,9 +6,32 @@
   .list
     flex: 1 1 auto
 
-  .form
-    flex: 0 1 500px
+    .addButton
+      position: fixed
+      bottom: 20px
+      right: 520px
 
+  .form
+    width: min(500px, 100vw)
+
+    display: flex
+    flex-direction: column
+
+    .closeInvoiceBtn
+      margin: auto 0
+      padding: 0.5rem 1rem
+
+      border-radius: 50px
+      background-color: limegreen
+      color: white
+
+      border: none
+      outline: none
+
+      cursor: pointer
+
+      &:hover, &:focus
+        background-color: #ff4b4b
 
 @media (max-width: 880px)
   .form
