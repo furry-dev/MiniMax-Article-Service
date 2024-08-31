@@ -104,8 +104,8 @@ export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
             <div className={styles.meta}>
                 <h2>{invoice.name} | <small>id: {invoice.id}</small></h2>
                 <span>Всього позицій: {invoice.products?.length || 0}</span>
+                {invoice.closedAt && <small className={styles.closed}>Closed at: {invoice.closedAt}</small>}
             </div>
-
             <div className={styles.tableContainer}>
                 <table className={styles.namesTable}>
                     <colgroup>

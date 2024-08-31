@@ -43,7 +43,11 @@ export class InvoiceManager {
         try {
             const snapshot = await get(child(ref(db), "invoices"))
             if (snapshot.exists()) {
-                const invoices = Object.values(snapshot.val()) as InvoiceEntity[]
+                const invoicesData = snapshot.val()
+                const invoices: InvoiceWithId[] = Object.keys(invoicesData).map(id => ({
+                    id,
+                    ...invoicesData[id]
+                }))
                 return invoices.filter(invoice => invoice.closedAt)
             } else {
                 return []

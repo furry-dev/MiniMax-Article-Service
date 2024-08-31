@@ -1,10 +1,10 @@
 "use client"
 
-import InvoicesList from "@/components/screens/Home/InvoicesList/InvoicesList"
+import InvoicesList from "@/components/lists/InvoicesList/InvoicesList"
 import InvoiceForm from "@/components/screens/Invoice/InvoiceForm/InvoiceForm"
 
 import styles from "./Invoice.module.sass"
-import NewInvoiceBtn from "@/components/screens/Home/InvoicesList/NewInvoiceBtn/NewInvoiceBtn"
+import NewInvoiceBtn from "@/components/lists/InvoicesList/NewInvoiceBtn/NewInvoiceBtn"
 import {useEffect, useState} from "react"
 import {InvoiceWithId} from "@/utils/InvoiceManager/Invoice.interfaces"
 import {InvoiceManager} from "@/utils/InvoiceManager/InvoiceManager"
@@ -39,12 +39,14 @@ export default function Invoice({invoiceId}: { invoiceId: string }) {
             </div>
             <div className={styles.form}>
                 {invoice && <InvoiceForm invoice={invoice}/>}
-                <button
-                    className={styles.closeInvoiceBtn}
-                    onClick={closeInvoiceHandler}
-                >
-                    Закрити накладну
-                </button>
+                {!invoice?.closedAt && (
+                    <button
+                        className={styles.closeInvoiceBtn}
+                        onClick={closeInvoiceHandler}
+                    >
+                        Закрити накладну
+                    </button>
+                )}
             </div>
         </main>
     )
