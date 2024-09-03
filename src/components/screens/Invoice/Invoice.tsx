@@ -11,16 +11,18 @@ import {InvoiceManager} from "@/utils/InvoiceManager/InvoiceManager"
 import toast from "react-hot-toast"
 import {useRouter} from "next/navigation"
 
-export default function Invoice({invoiceId}: { invoiceId: string }) {
+export default function Invoice({invoiceId}: { invoiceId?: string }) {
     const [invoice, setInvoice] = useState<InvoiceWithId | null>(null)
 
     const router = useRouter()
 
     useEffect(() => {
-        return InvoiceManager.subscribeToInvoiceById(invoiceId, setInvoice)
+        if (invoiceId) return InvoiceManager.subscribeToInvoiceById(invoiceId, setInvoice)
     }, [invoiceId])
 
     const closeInvoiceHandler = () => {
+        if (!invoiceId) return
+
         toast.promise(
             InvoiceManager.closeInvoice(invoiceId),
             {
@@ -37,17 +39,19 @@ export default function Invoice({invoiceId}: { invoiceId: string }) {
                 <InvoicesList/>
                 <NewInvoiceBtn className={styles.addButton}/>
             </div>
-            <div className={styles.form}>
-                {invoice && <InvoiceForm invoice={invoice}/>}
-                {!invoice?.closedAt && (
-                    <button
-                        className={styles.closeInvoiceBtn}
-                        onClick={closeInvoiceHandler}
-                    >
-                        Закрити накладну
-                    </button>
-                )}
-            </div>
+            {invoiceId && (
+                <div className={styles.form}>
+                    {invoice && <InvoiceForm invoice={invoice}/>}
+                    {!invoice?.closedAt && (
+                        <button
+                            className={styles.closeInvoiceBtn}
+                            onClick={closeInvoiceHandler}
+                        >
+                            Закрити накладну
+                        </button>
+                    )}
+                </div>
+            )}
         </main>
     )
 }

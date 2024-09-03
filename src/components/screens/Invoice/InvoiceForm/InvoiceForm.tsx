@@ -3,7 +3,7 @@
 import styles from "./InvoiceForm.module.sass"
 import {InvoiceWithId, ProductEntity, ProductStatus} from "@/utils/InvoiceManager/Invoice.interfaces"
 import StatusBtn from "@/components/screens/Invoice/StatusBtn/StatusBtn"
-import {useEffect, useState} from "react"
+import React, {useEffect, useRef, useState} from "react"
 import {InvoiceManager} from "@/utils/InvoiceManager/InvoiceManager"
 
 export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
@@ -15,6 +15,28 @@ export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
             {article: 0, title: "", count: 1, status: "Assembly"}
         ])
     }, [invoice])
+
+    const formRef = useRef<HTMLFormElement | null>(null)
+
+    useEffect(() => {
+        const keyboardControl = (e: KeyboardEvent) => {
+            switch (e.code) {
+            case "KeyC":
+                const firstInput = formRef?.current?.querySelector("input")
+                if (firstInput instanceof HTMLInputElement) {
+                    firstInput.focus()
+                    e.preventDefault()
+                }
+                break
+            default:
+                // console.log(e.code)
+            }
+        }
+
+        document.addEventListener("keydown", keyboardControl)
+
+        return () => document.removeEventListener("keydown", keyboardControl)
+    }, [])
 
     const [invalidFields, setInvalidFields] = useState<number[]>([])
 
@@ -60,47 +82,56 @@ export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
         })
     }
 
-    const handleFormChange = (e: React.ChangeEvent<HTMLFormElement>) => {
-        const {name, value} = e.target as unknown as HTMLInputElement
-        const [indexStr, field] = name.split("-")
-        const index = parseInt(indexStr)
+    const tabulationOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        const activeElement = document.activeElement
 
+        if (activeElement && activeElement.tagName === "INPUT" && formRef?.current) {
+            const inputs = Array.from(formRef.current.querySelectorAll("input"))
+            const index = inputs.indexOf(activeElement as HTMLInputElement)
 
-        if (!isNaN(index) && field) {
-            handleInputChange(index, field as keyof ProductEntity, value)
-        }
-    }
-
-    const handleFormKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
-        if (e.key === "Enter") {
-            const form = e.currentTarget
-            const activeElement = document.activeElement
-
-            if (activeElement && activeElement.tagName === "INPUT") {
-                const inputs = Array.from(form.querySelectorAll("input"))
-                const index = inputs.indexOf(activeElement as HTMLInputElement)
-
-                if (index >= 0 && index < inputs.length - 1) {
-                    inputs[index + 1].focus()
-                    e.preventDefault()
-                }
+            if (index >= 0 && index < inputs.length - 1) {
+                inputs[index + 1].focus()
+                e.preventDefault()
             }
         }
     }
 
-    const handleInputFocus = (e: React.FocusEvent<HTMLFormElement>) => {
-        if (!(e.target instanceof HTMLInputElement)) return
+    const handleArticleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        const activeElement = document.activeElement
+
+        if (activeElement && activeElement.tagName === "INPUT" && formRef?.current) {
+            const inputs = Array.from(formRef.current.querySelectorAll("input[name$='-article']")) as HTMLInputElement[]
+            const index = inputs.indexOf(activeElement as HTMLInputElement)
+
+            if (e.key === "ArrowUp" && index > 0) {
+                inputs[index - 1].focus()
+                e.preventDefault()
+            } else if (e.key === "ArrowDown" && index < inputs.length - 1) {
+                inputs[index + 1].focus()
+                e.preventDefault()
+            } else if (e.key === "Enter") {
+                tabulationOnEnter(e)
+            } else if (!/[0-9]/.test(e.key) && e.key !== "Backspace" && e.key !== "Tab") {
+                e.preventDefault()
+            }
+        }
+    }
+
+
+    const handleCountKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+            tabulationOnEnter(e)
+        } else if (!/[0-9]/.test(e.key) && e.key !== "ArrowUp" && e.key !== "ArrowDown" && e.key !== "Backspace" && e.key !== "Tab") {
+            e.preventDefault()
+        }
+    }
+
+    const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
         e.target.select()
-        e.preventDefault()
     }
 
     return (
-        <form
-            className={styles.form}
-            onChange={handleFormChange}
-            onKeyDown={handleFormKeyDown}
-            onFocus={handleInputFocus}
-        >
+        <form className={styles.form} ref={formRef}>
             <div className={styles.meta}>
                 <h2>{invoice.name} | <small>id: {invoice.id}</small></h2>
                 <span>Всього позицій: {invoice.products?.length || 0}</span>
@@ -140,6 +171,9 @@ export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
                                         value={item.article}
                                         min={0}
                                         step={1}
+                                        onKeyDown={handleArticleKeyDown}
+                                        onFocus={handleInputFocus}
+                                        onChange={(e) => handleInputChange(index, "article", e.target.value)}
                                     />
                                 </td>
                                 <td className={styles.name}>
@@ -152,10 +186,14 @@ export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
                                         value={item.count}
                                         min={1}
                                         step={1}
+                                        onKeyDown={handleCountKeyDown}
+                                        onFocus={handleInputFocus}
+                                        onChange={(e) => handleInputChange(index, "count", e.target.value)}
                                     />
                                 </td>
                                 <td>
-                                    <StatusBtn status={item.status} setStatus={(status) => setStatus(index, status)}/>
+                                    <StatusBtn name={`${index}-status`} status={item.status}
+                                        setStatus={(status) => setStatus(index, status)}/>
                                 </td>
                             </tr>
                         ))}
@@ -165,3 +203,4 @@ export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
         </form>
     )
 }
+

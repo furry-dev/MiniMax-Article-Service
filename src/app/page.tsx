@@ -1,5 +1,5 @@
-import Home from "@/components/screens/Home/Home"
+import InvoicePage from "@/app/invoice/[id]/page"
 
 export default function HomePage() {
-    return <Home/>
+    return <InvoicePage/>
 }

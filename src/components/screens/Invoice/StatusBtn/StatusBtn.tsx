@@ -12,9 +12,10 @@ const STATUS_LIST: { state: ProductStatus, text: string, color: string }[] = [
 ]
 
 
-export default function StatusBtn({status, setStatus}: {
+export default function StatusBtn({status, setStatus, name}: {
     status: ProductStatus,
-    setStatus: (status: ProductStatus) => void
+    setStatus: (status: ProductStatus) => void,
+    name?: string
 }) {
     const currentIndex = STATUS_LIST.findIndex(value => value.state === status)
 
@@ -24,6 +25,7 @@ export default function StatusBtn({status, setStatus}: {
 
     return (
         <button
+            name={name}
             className={styles.button}
             type={"button"}
             onClick={onButtonClick}
