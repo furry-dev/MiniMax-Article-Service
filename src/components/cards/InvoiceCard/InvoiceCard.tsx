@@ -5,7 +5,7 @@ import Link from "next/link"
 
 export default function InvoiceCard({invoice}: { invoice: InvoiceWithId }) {
     return (
-        <Link href={`/invoice/${invoice.id}`} className={styles.card}>
+        <Link href={`/${invoice.closedAt ? "archive" : "invoice"}/${invoice.id}`} className={styles.card}>
             <small>id: {invoice.id}</small>
             <h2>{invoice.name}</h2>
             <small className={styles.created}>Created at: {new Date(invoice.createdAt).toLocaleString()}</small>

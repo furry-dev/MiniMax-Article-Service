@@ -28,7 +28,12 @@ export class InvoiceManager {
         try {
             const snapshot = await get(child(ref(db), `invoices/${id}`))
             if (snapshot.exists()) {
-                return snapshot.val() as InvoiceEntity
+                const invoiceData = snapshot.val() as InvoiceEntity
+                const invoiceWithId: InvoiceWithId = {
+                    id,
+                    ...invoiceData
+                }
+                return invoiceWithId
             } else {
                 console.warn(`Invoice with id ${id} not found`)
                 return null

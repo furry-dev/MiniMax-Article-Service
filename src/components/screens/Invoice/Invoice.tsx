@@ -1,7 +1,7 @@
 "use client"
 
 import InvoicesList from "@/components/lists/InvoicesList/InvoicesList"
-import InvoiceForm from "@/components/screens/Invoice/InvoiceForm/InvoiceForm"
+import InvoiceForm from "@/components/forms/InvoiceForm/InvoiceForm"
 
 import styles from "./Invoice.module.sass"
 import NewInvoiceBtn from "@/components/lists/InvoicesList/NewInvoiceBtn/NewInvoiceBtn"

@@ -10,10 +10,12 @@ export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
     const [products, setProducts] = useState<ProductEntity[]>(invoice.products || [])
 
     useEffect(() => {
-        setProducts([
-            ...(invoice.products || []),
-            {article: 0, title: "", count: 1, status: "Assembly"}
-        ])
+        if (!invoice.closedAt) {
+            setProducts([
+                ...(invoice.products || []),
+                {article: 0, title: "", count: 1, status: "Assembly"}
+            ])
+        }
     }, [invoice])
 
     const formRef = useRef<HTMLFormElement | null>(null)
@@ -41,6 +43,8 @@ export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
     const [invalidFields, setInvalidFields] = useState<number[]>([])
 
     useEffect(() => {
+        if (invoice.closedAt) return
+
         const invalidIndexes: number[] = products
             .map((product, index) => (product.count < 1 ? index : -1))
             .filter(index => index !== -1)
@@ -50,9 +54,11 @@ export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
         if (invalidIndexes.length > 0) return
 
         InvoiceManager.updateInvoiceProducts(invoice.id, products.filter(value => value.article > 0))
-    }, [invoice.id, products])
+    }, [invoice.closedAt, invoice.id, products])
 
     const setStatus = (index: number, status: ProductStatus) => {
+        if (invoice.closedAt) return
+
         setProducts(prevProducts =>
             prevProducts.map((product, i) =>
                 i === index ? {...product, status} : product
@@ -61,6 +67,8 @@ export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
     }
 
     const handleInputChange = (index: number, field: keyof ProductEntity, value: string | number) => {
+        if (invoice.closedAt) return
+
         setProducts(prevProducts => {
             let updatedProducts = prevProducts.map((product, i) =>
                 i === index ? {...product, [field]: value} : product

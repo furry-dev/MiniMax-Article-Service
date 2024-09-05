@@ -1,5 +1,1 @@
-import Archive from "@/components/screens/Archive/Archive"
-
-export default function HomePage() {
-    return <Archive/>
-}
+export {default} from "@/app/archive/[id]/page"

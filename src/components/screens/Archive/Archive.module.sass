@@ -1,8 +1,33 @@
 .main
   display: flex
-  flex-direction: column
 
   gap: 20px
 
-  h1
-    color: #ff4b4b
+  .list
+    flex: 1 1 auto
+
+    display: flex
+    flex-direction: column
+    gap: 15px
+
+    h1
+      color: #ff4b4b
+
+  .form
+    width: min(500px, 100vw)
+
+    display: flex
+    flex-direction: column
+
+@media (max-width: 880px)
+  .form
+    background-color: #0a0b0b
+
+    position: fixed
+
+    left: 0
+    top: var(--nav-height)
+    right: 0
+    bottom: 0
+
+    padding: 15px 0
