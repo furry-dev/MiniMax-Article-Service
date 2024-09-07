@@ -21,12 +21,16 @@ function Archive({invoiceId}: { invoiceId?: string }) {
     const now = new Date()
     const [date, setDate] = useState(new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime())
 
-    const [pageLimit, setPageLimit] = useState(Number(localStorage.getItem("archive_pageLimit") || 20))
+    const [pageLimit, setPageLimit] = useState(20)
+
+    useEffect(() => {
+        setPageLimit(parseInt(localStorage.getItem("archive_pageLimit") || "20"))
+    }, [])
 
     const formatDateTimeLocal = (timestamp: number) => {
         const date = new Date(timestamp)
         const year = date.getFullYear()
-        const month = String(date.getMonth() + 1).padStart(2, "0") // Месяцы начинаются с 0, поэтому +1
+        const month = String(date.getMonth() + 1).padStart(2, "0")
         const day = String(date.getDate()).padStart(2, "0")
         const hours = String(date.getHours()).padStart(2, "0")
         const minutes = String(date.getMinutes()).padStart(2, "0")
@@ -41,9 +45,7 @@ function Archive({invoiceId}: { invoiceId?: string }) {
     }
 
     const changePageLimit = (e: React.ChangeEvent<HTMLInputElement>) => {
-        let limit = Number(e.target.value)
-
-        if (!limit && limit !== 0) limit = 20
+        let limit = parseInt(e.target.value) || 0
 
         localStorage.setItem("archive_pageLimit", limit.toString())
         setPageLimit(limit)
