@@ -1,5 +1,17 @@
 import {db} from "@/db/firebase.config"
-import {child, get, off, onValue, push, ref, update} from "@firebase/database"
+import {
+    child,
+    get,
+    limitToFirst,
+    off,
+    onValue,
+    orderByChild,
+    push,
+    query,
+    ref,
+    startAfter,
+    update
+} from "@firebase/database"
 import {InvoiceEntity, InvoiceWithId, ProductEntity} from "@/utils/InvoiceManager/Invoice.interfaces"
 
 export class InvoiceManager {
@@ -44,9 +56,26 @@ export class InvoiceManager {
         }
     }
 
-    static async getArchive() {
+    static async getArchive(limit: number = 20, startAfterKey?: number) {
         try {
-            const snapshot = await get(child(ref(db), "invoices"))
+            let queryRef
+            if (startAfterKey) {
+                queryRef = query(
+                    ref(db, "invoices"),
+                    orderByChild("closedAt"),
+                    startAfter(startAfterKey),
+                    limitToFirst(limit)
+                )
+            } else {
+                queryRef = query(
+                    ref(db, "invoices"),
+                    orderByChild("closedAt"),
+                    limitToFirst(limit)
+                )
+            }
+
+            const snapshot = await get(queryRef)
+
             if (snapshot.exists()) {
                 const invoicesData = snapshot.val()
                 const invoices: InvoiceWithId[] = Object.keys(invoicesData).map(id => ({
@@ -85,7 +114,7 @@ export class InvoiceManager {
             const newInvoice: InvoiceEntity = {
                 name: newName.toString().padStart(3, "0"),
                 products: [],
-                createdAt: new Date().toISOString(),
+                createdAt: new Date().getTime()
             }
 
             const invoiceRef = await push(ref(db, "invoices"), newInvoice)
@@ -111,7 +140,7 @@ export class InvoiceManager {
     static async closeInvoice(invoiceId: string) {
         try {
             const invoiceRef = ref(db, `invoices/${invoiceId}`)
-            await update(invoiceRef, {closedAt: new Date().toISOString()})
+            await update(invoiceRef, {closedAt: new Date().getTime()})
             console.log("Invoice closed successfully")
         } catch (error) {
             console.error("Error closed invoice:", error)
@@ -129,7 +158,6 @@ export class InvoiceManager {
                     ...invoicesData[id]
                 }))
 
-                // Фильтруем инвойсы по закрытому статусу
                 callback(invoicesList.filter(invoice => !invoice.closedAt))
             } else {
                 callback([])

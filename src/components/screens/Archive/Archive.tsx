@@ -18,11 +18,50 @@ function Archive({invoiceId}: { invoiceId?: string }) {
         }
     }, [invoiceId])
 
+    const now = new Date()
+    const [date, setDate] = useState(new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime())
+
+    const [pageLimit, setPageLimit] = useState(Number(localStorage.getItem("archive_pageLimit") || 20))
+
+    const formatDateTimeLocal = (timestamp: number) => {
+        const date = new Date(timestamp)
+        const year = date.getFullYear()
+        const month = String(date.getMonth() + 1).padStart(2, "0") // Месяцы начинаются с 0, поэтому +1
+        const day = String(date.getDate()).padStart(2, "0")
+        const hours = String(date.getHours()).padStart(2, "0")
+        const minutes = String(date.getMinutes()).padStart(2, "0")
+
+        return `${year}-${month}-${day}T${hours}:${minutes}`
+    }
+
+    const formattedDate = formatDateTimeLocal(date)
+
+    const dateChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setDate(new Date(e.target.value).getTime())
+    }
+
+    const changePageLimit = (e: React.ChangeEvent<HTMLInputElement>) => {
+        let limit = Number(e.target.value)
+
+        if (!limit && limit !== 0) limit = 20
+
+        localStorage.setItem("archive_pageLimit", limit.toString())
+        setPageLimit(limit)
+    }
+
     return (
         <main className={styles.main}>
             <div className={`${styles.list} ${invoiceId ? styles.activeInvoice : ""}`}>
-                <h1>Архів</h1>
-                <InvoicesList type={"Archive"}/>
+                <div className={styles.header}>
+                    <h1>Архів</h1>
+                    <div className={styles.inputs}>
+                        <input type="number" value={pageLimit === 0 ? "" : pageLimit} onChange={changePageLimit}
+                            min={5} max={100} step={5}/>
+                        <input type="datetime-local" name={"closed-date"} onChange={dateChangeHandler}
+                            value={formattedDate}/>
+                    </div>
+                </div>
+                <InvoicesList type={"Archive"} closedAt={date} pageLimit={pageLimit}/>
             </div>
             {invoiceId && (
                 <div className={styles.form}>

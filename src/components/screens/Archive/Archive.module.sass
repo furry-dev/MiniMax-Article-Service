@@ -7,8 +7,21 @@
     &.activeInvoice
       margin-right: min(min(calc(100vw - 480px), 500px), 100vw)
 
-    h1
-      color: #ff4b4b
+    .header
+      display: flex
+      justify-content: space-between
+
+      h1
+        color: #ff4b4b
+
+      .inputs
+        display: flex
+        gap: 15px
+
+        input
+          padding: 0.5rem 0.8rem
+
+          width: min-content
 
   .form
     position: fixed
