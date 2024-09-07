@@ -5,6 +5,7 @@ import {InvoiceWithId, ProductEntity, ProductStatus} from "@/utils/InvoiceManage
 import StatusBtn from "@/components/screens/Invoice/StatusBtn/StatusBtn"
 import React, {useEffect, useRef, useState} from "react"
 import {InvoiceManager} from "@/utils/InvoiceManager/InvoiceManager"
+import toast from "react-hot-toast"
 
 export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
     const [products, setProducts] = useState<ProductEntity[]>(invoice.products || [])
@@ -38,7 +39,7 @@ export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
     useEffect(() => {
         const keyboardControl = (e: KeyboardEvent) => {
             switch (e.code) {
-            case "KeyC":
+            case "KeyA":
                 const firstInput = formRef?.current?.querySelector("input")
                 if (firstInput instanceof HTMLInputElement) {
                     firstInput.focus()
@@ -134,6 +135,8 @@ export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
                 e.preventDefault()
             } else if (e.key === "Enter") {
                 tabulationOnEnter(e)
+            } else if (e.ctrlKey && e.code === "KeyC") {
+                toast.success("Артикул скопійовано")
             } else if (!/[0-9]/.test(e.key) && e.key !== "Backspace" && e.key !== "Tab") {
                 e.preventDefault()
             }
@@ -144,6 +147,8 @@ export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
     const handleCountKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
             tabulationOnEnter(e)
+        } else if (e.ctrlKey && e.code === "KeyC") {
+            toast.success("Кількість скопійовано")
         } else if (!/[0-9]/.test(e.key) && e.key !== "ArrowUp" && e.key !== "ArrowDown" && e.key !== "Backspace" && e.key !== "Tab") {
             e.preventDefault()
         }
