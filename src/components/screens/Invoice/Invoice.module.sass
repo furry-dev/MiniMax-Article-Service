@@ -1,18 +1,15 @@
 .main
   .list
     &.activeInvoice
-      margin-right: min(min(calc(100vw - 480px), 500px), 100vw)
+      margin-right: min(calc(100vw - 480px), 500px, 100vw)
 
       .addButton
-        right: min(min(calc(100vw - 480px), 500px), 100vw)
+        right: min(calc(100vw - 480px), 500px, 100vw)
 
     .addButton
       position: fixed
       bottom: 20px
       right: 20px
-
-      &.noInvoice
-        right: 20px
 
   .form
     position: fixed
@@ -20,7 +17,7 @@
     bottom: 0
     right: 0
 
-    width: min(min(calc(100vw - 480px), 500px), 100vw)
+    width: min(calc(100vw - 480px), 500px, 100vw)
 
     padding: 20px 0
 

@@ -166,7 +166,7 @@ export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
                     <colgroup>
                         <col style={{width: "90px"}}/>
                         <col
-                            style={{width: `calc(${windowWidth > 880 ? "min(min(calc(100vw - 480px), 500px), 100vw)" : "100vw"} - 250px)`}}/>
+                            style={{width: `calc(${windowWidth > 880 ? "min(calc(100vw - 480px), 500px, 100vw)" : "100vw"} - 250px)`}}/>
                         <col style={{width: "60px"}}/>
                         <col style={{width: "100px"}}/>
                     </colgroup>
