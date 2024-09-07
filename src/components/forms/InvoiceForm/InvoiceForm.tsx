@@ -9,6 +9,21 @@ import {InvoiceManager} from "@/utils/InvoiceManager/InvoiceManager"
 export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
     const [products, setProducts] = useState<ProductEntity[]>(invoice.products || [])
 
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+
+    useEffect(() => {
+        const windowResize = () => {
+            setWindowWidth(window.innerWidth)
+        }
+
+        window.addEventListener("resize", windowResize)
+        windowResize()
+
+        return () => {
+            window.removeEventListener("resize", windowResize)
+        }
+    }, [])
+
     useEffect(() => {
         if (!invoice.closedAt) {
             setProducts([
@@ -143,13 +158,15 @@ export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
             <div className={styles.meta}>
                 <h2>{invoice.name} | <small>id: {invoice.id}</small></h2>
                 <span>Всього позицій: {invoice.products?.length || 0}</span>
-                {invoice.closedAt && <small className={styles.closed}>Closed at: {invoice.closedAt}</small>}
+                {invoice.closedAt &&
+                    <small className={styles.closed}>Closed at: {new Date(invoice.closedAt).toLocaleString()}</small>}
             </div>
             <div className={styles.tableContainer}>
                 <table className={styles.namesTable}>
                     <colgroup>
                         <col style={{width: "90px"}}/>
-                        <col style={{width: "calc(min(100vw, 500px) - 250px)"}}/>
+                        <col
+                            style={{width: `calc(${windowWidth > 880 ? "min(min(calc(100vw - 480px), 500px), 100vw)" : "100vw"} - 250px)`}}/>
                         <col style={{width: "60px"}}/>
                         <col style={{width: "100px"}}/>
                     </colgroup>

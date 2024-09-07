@@ -9,15 +9,24 @@ export default function Navigation() {
     const navRef = useRef<HTMLElement | null>(null)
 
     useEffect(() => {
-        const navWidth = navRef.current?.clientWidth
-        const navHeight = navRef.current?.clientHeight
+        const changeWindowSize = () => {
+            const navWidth = navRef.current?.clientWidth
+            const navHeight = navRef.current?.clientHeight
 
-        const root = document.querySelector(":root")
+            const root = document.querySelector(":root")
 
-        if (!(root instanceof HTMLElement) || !navWidth) return
+            if (!(root instanceof HTMLElement) || !navWidth) return
 
-        root.style.setProperty("--nav-width", `${navWidth}px`)
-        root.style.setProperty("--nav-height", `${navHeight}px`)
+            root.style.setProperty("--nav-width", `${navWidth}px`)
+            root.style.setProperty("--nav-height", `${navHeight}px`)
+        }
+
+        window.addEventListener("resize", changeWindowSize)
+        changeWindowSize()
+
+        return () => {
+            window.removeEventListener("resize", changeWindowSize)
+        }
     })
 
     return (
