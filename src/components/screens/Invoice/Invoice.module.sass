@@ -1,13 +1,15 @@
 .main
   .list
-    flex: 1 1 auto
+    &.activeInvoice
+      margin-right: min(min(calc(100vw - 480px), 500px), 100vw)
 
-    margin-right: min(min(calc(100vw - 480px), 500px), 100vw)
+      .addButton
+        right: min(min(calc(100vw - 480px), 500px), 100vw)
 
     .addButton
       position: fixed
       bottom: 20px
-      right: min(min(calc(100vw - 480px), 500px), 100vw)
+      right: 20px
 
       &.noInvoice
         right: 20px

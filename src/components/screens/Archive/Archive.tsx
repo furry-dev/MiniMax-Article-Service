@@ -20,7 +20,7 @@ function Archive({invoiceId}: { invoiceId?: string }) {
 
     return (
         <main className={styles.main}>
-            <div className={styles.list}>
+            <div className={`${styles.list} ${invoiceId ? styles.activeInvoice : ""}`}>
                 <h1>Архів</h1>
                 <InvoicesList type={"Archive"}/>
             </div>
