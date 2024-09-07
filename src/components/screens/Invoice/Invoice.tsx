@@ -37,7 +37,7 @@ export default function Invoice({invoiceId}: { invoiceId?: string }) {
         <main className={styles.main}>
             <div className={`${styles.list} ${invoiceId ? styles.activeInvoice : ""}`}>
                 <InvoicesList/>
-                <NewInvoiceBtn className={`${styles.addButton} ${!invoiceId ? styles.noInvoice : ""}`}/>
+                <NewInvoiceBtn className={styles.addButton}/>
             </div>
             {invoiceId && (
                 <div className={styles.form}>

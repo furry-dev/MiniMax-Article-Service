@@ -7,17 +7,28 @@ import {useEffect, useState} from "react"
 import {InvoiceManager} from "@/utils/InvoiceManager/InvoiceManager"
 import Link from "next/link"
 
+const DEFAULT_PAGE_LIMIT = 20
 
-export default function InvoicesList({type}: { type?: "Archive" | "Opened" }) {
+export default function InvoicesList({type, closedAt, pageLimit}: {
+    type?: "Archive" | "Opened",
+    closedAt?: number,
+    pageLimit?: number
+}) {
     const [invoices, setInvoices] = useState<InvoiceWithId[]>([])
 
     useEffect(() => {
         if (type === "Archive") {
-            InvoiceManager.getArchive().then(value => setInvoices(value))
+            InvoiceManager.getArchive(pageLimit || DEFAULT_PAGE_LIMIT, closedAt).then(value => setInvoices(value))
         } else {
             return InvoiceManager.subscribeToInvoices(setInvoices)
         }
-    }, [type])
+    }, [closedAt, pageLimit, type])
+
+    const loadMoreHandler = () => {
+        InvoiceManager.getArchive(pageLimit || DEFAULT_PAGE_LIMIT, invoices[invoices.length - 1].closedAt).then(value => {
+            setInvoices(oldInvoices => [...oldInvoices, ...value])
+        })
+    }
 
     return (
         <ul className={styles.list}>
@@ -26,7 +37,10 @@ export default function InvoicesList({type}: { type?: "Archive" | "Opened" }) {
                     <InvoiceCard invoice={invoice}/>
                 </li>
             ))}
+            {invoices.length < 1 && <span>Нічого немає...</span>}
             {type !== "Archive" && (<Link className={styles.archiveBtn} href={"/archive"}>Архів</Link>)}
+            {type === "Archive" &&
+                <button className={styles.loadMoreBtn} onClick={loadMoreHandler}>Завантажити ще...</button>}
         </ul>
     )
 }

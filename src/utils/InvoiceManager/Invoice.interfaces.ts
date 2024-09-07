@@ -7,15 +7,15 @@ export interface ProductEntity {
     status: ProductStatus,
     history?: {
         title: string,
-        date: string,
+        date: number,
     }
 }
 
 export interface InvoiceEntity {
     name: string,
     products?: ProductEntity[],
-    createdAt: string,
-    closedAt?: string,
+    createdAt: number,
+    closedAt?: number,
 }
 
 export interface InvoiceWithId extends InvoiceEntity {
