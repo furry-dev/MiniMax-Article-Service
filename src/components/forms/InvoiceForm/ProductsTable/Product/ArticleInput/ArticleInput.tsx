@@ -24,7 +24,7 @@ export default function ArticleInput({tabulationOnEnter, containerRef, ...props}
                 tabulationOnEnter(e)
             } else if (e.ctrlKey && e.code === "KeyC") {
                 toast.success("Артикул скопійовано")
-            } else if (!/[0-9]/.test(e.key) && e.key !== "Backspace" && e.key !== "Tab") {
+            } else if (!/[0-9]/.test(e.key) && e.key !== "Backspace" && e.key !== "Tab" && e.key !== "ArrowRight" && e.key !== "ArrowLeft") {
                 e.preventDefault()
             }
         }
