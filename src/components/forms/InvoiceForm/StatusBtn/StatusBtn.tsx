@@ -1,9 +1,16 @@
 "use client"
 
-import React from "react"
+import React, {SetStateAction} from "react"
 
 import styles from "./StatusBtn.module.sass"
-import {ProductStatus} from "@/utils/InvoiceManager/Invoice.interfaces"
+import {ProductEntity, ProductStatus} from "@/utils/InvoiceManager/Invoice.interfaces"
+
+interface StatusBtnProps {
+    index: number
+    product: ProductEntity
+    setProducts: React.Dispatch<SetStateAction<ProductEntity[]>>
+    name?: string
+}
 
 const STATUS_LIST: { state: ProductStatus, text: string, color: string }[] = [
     {state: "Assembly", text: "Збирається", color: "red"},
@@ -12,23 +19,36 @@ const STATUS_LIST: { state: ProductStatus, text: string, color: string }[] = [
 ]
 
 
-export default function StatusBtn({status, setStatus, name}: {
-    status: ProductStatus,
-    setStatus: (status: ProductStatus) => void,
-    name?: string
-}) {
-    const currentIndex = STATUS_LIST.findIndex(value => value.state === status)
+export default function StatusBtn(
+    {
+        index,
+        product,
+        setProducts,
+        name
+    }: StatusBtnProps
+) {
+    const currentIndex = STATUS_LIST.findIndex(value => value.state === product.status)
 
-    const onButtonClick = () => {
-        setStatus(STATUS_LIST[(currentIndex + 1) % STATUS_LIST.length].state)
+    const onBtnClick = () => {
+        if (closed) return
+
+        const status: ProductStatus = STATUS_LIST[(currentIndex + 1) % STATUS_LIST.length].state
+
+        setProducts(prevProducts =>
+            prevProducts.map((product, i) =>
+                i === index ? {...product, status} : product
+            )
+        )
+
     }
+
 
     return (
         <button
             name={name}
             className={styles.button}
             type={"button"}
-            onClick={onButtonClick}
+            onClick={onBtnClick}
             style={{background: STATUS_LIST[currentIndex].color}}
         >
             {STATUS_LIST[currentIndex]?.text}

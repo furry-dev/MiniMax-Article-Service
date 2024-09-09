@@ -1,30 +1,14 @@
 "use client"
 
 import styles from "./InvoiceForm.module.sass"
-import {InvoiceWithId, ProductEntity, ProductStatus} from "@/utils/InvoiceManager/Invoice.interfaces"
-import StatusBtn from "@/components/forms/InvoiceForm/StatusBtn/StatusBtn"
+import {InvoiceWithId, ProductEntity} from "@/utils/InvoiceManager/Invoice.interfaces"
 import React, {useEffect, useRef, useState} from "react"
 import {InvoiceManager} from "@/utils/InvoiceManager/InvoiceManager"
-import toast from "react-hot-toast"
-import {getProduct} from "@/utils/livesearch"
+import InvoiceMeta from "@/components/forms/InvoiceForm/InvoiceMeta/InvoiceMeta"
+import ProductsTable from "@/components/forms/InvoiceForm/ProductsTable/ProductsTable"
 
 export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
     const [products, setProducts] = useState<ProductEntity[]>(invoice.products || [])
-
-    const [windowWidth, setWindowWidth] = useState(window.innerWidth)
-
-    useEffect(() => {
-        const windowResize = () => {
-            setWindowWidth(window.innerWidth)
-        }
-
-        window.addEventListener("resize", windowResize)
-        windowResize()
-
-        return () => {
-            window.removeEventListener("resize", windowResize)
-        }
-    }, [])
 
     useEffect(() => {
         if (!invoice.closedAt) {
@@ -74,184 +58,13 @@ export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
 
     }, [invoice.closedAt, invoice.id, products])
 
-    const setStatus = (index: number, status: ProductStatus) => {
-
-        if (invoice.closedAt) return
-
-        setProducts(prevProducts =>
-            prevProducts.map((product, i) =>
-                i === index ? {...product, status} : product
-            )
-        )
-    }
-
-    const handleInputChange = async (index: number, field: keyof ProductEntity, value: string | number) => {
-        if (invoice.closedAt) return
-
-        setProducts(prevProducts => {
-            let updatedProducts = prevProducts.map((product, i) =>
-                i === index ? {...product, [field]: value} : product
-            )
-
-            if (field === "article" && value === "") {
-                updatedProducts = updatedProducts.filter((_, i) => i !== index)
-            }
-
-            const lastProduct = updatedProducts[updatedProducts.length - 1]
-            if (lastProduct.article) {
-                return [
-                    ...updatedProducts,
-                    {article: 0, title: "", count: 1, status: "Assembly"}
-                ]
-            }
-
-            return updatedProducts
-        })
-
-        if (field === "article" && value) {
-            const formData = new FormData()
-            formData.set("article", value.toString())
-
-            try {
-                const productData = await getProduct(formData)
-                const productTitle = productData?.name || ""
-
-                console.log(productTitle)
-
-                setProducts(prevProducts =>
-                    prevProducts.map((product, i) =>
-                        i === index ? {...product, title: productTitle} : product
-                    )
-                )
-            } catch (error) {
-                console.error("Ошибка при получении названия продукта:", error)
-            }
-        }
-    }
-
-    const tabulationOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        const activeElement = document.activeElement
-
-        if (activeElement && activeElement.tagName === "INPUT" && formRef?.current) {
-            const inputs = Array.from(formRef.current.querySelectorAll("input"))
-            const index = inputs.indexOf(activeElement as HTMLInputElement)
-
-            if (index >= 0 && index < inputs.length - 1) {
-                inputs[index + 1].focus()
-                e.preventDefault()
-            }
-        }
-    }
-
-    const handleArticleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        const activeElement = document.activeElement
-
-        if (activeElement && activeElement.tagName === "INPUT" && formRef?.current) {
-            const inputs = Array.from(formRef.current.querySelectorAll("input[name$='-article']")) as HTMLInputElement[]
-            const index = inputs.indexOf(activeElement as HTMLInputElement)
-
-            if (e.key === "ArrowUp" && index > 0) {
-                inputs[index - 1].focus()
-                e.preventDefault()
-            } else if (e.key === "ArrowDown" && index < inputs.length - 1) {
-                inputs[index + 1].focus()
-                e.preventDefault()
-            } else if (e.key === "Enter") {
-                tabulationOnEnter(e)
-            } else if (e.ctrlKey && e.code === "KeyC") {
-                toast.success("Артикул скопійовано")
-            } else if (!/[0-9]/.test(e.key) && e.key !== "Backspace" && e.key !== "Tab") {
-                e.preventDefault()
-            }
-        }
-    }
-
-
-    const handleCountKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Enter") {
-            tabulationOnEnter(e)
-        } else if (e.ctrlKey && e.code === "KeyC") {
-            toast.success("Кількість скопійовано")
-        } else if (!/[0-9]/.test(e.key) && e.key !== "ArrowUp" && e.key !== "ArrowDown" && e.key !== "Backspace" && e.key !== "Tab") {
-            e.preventDefault()
-        }
-    }
-
-    const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-        e.target.select()
-    }
 
     return (
         <form className={styles.form} ref={formRef}>
-            <div className={styles.meta}>
-                <h2>{invoice.name} | <small>id: {invoice.id}</small></h2>
-                <span>Всього позицій: {invoice.products?.length || 0}</span>
-                {invoice.closedAt &&
-                    <small className={styles.closed}>Closed at: {new Date(invoice.closedAt).toLocaleString()}</small>}
-            </div>
+            <InvoiceMeta invoice={invoice}/>
             <div className={styles.tableContainer}>
-                <table className={styles.namesTable}>
-                    <colgroup>
-                        <col style={{width: "90px"}}/>
-                        <col
-                            style={{width: `calc(${windowWidth > 880 ? "min(calc(100vw - 480px), 500px, 100vw)" : "100vw"} - 250px)`}}/>
-                        <col style={{width: "60px"}}/>
-                        <col style={{width: "100px"}}/>
-                    </colgroup>
-
-                    <thead>
-                        <tr>
-                            <th>Артикул</th>
-                            <th>Назва</th>
-                            <th>к-сть</th>
-                            <th>Статус</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {products.map((item, index) => (
-                            <tr
-                                key={index}
-                                className={
-                                    invalidFields.includes(index)
-                                        ? styles.invalid
-                                        : ""
-                                }
-                            >
-                                <td>
-                                    <input
-                                        type="number"
-                                        name={`${index}-article`}
-                                        value={item.article === 0 ? "" : item.article}
-                                        min={0}
-                                        step={1}
-                                        onKeyDown={handleArticleKeyDown}
-                                        onFocus={handleInputFocus}
-                                        onChange={(e) => handleInputChange(index, "article", e.target.value)}
-                                    />
-                                </td>
-                                <td className={styles.name}>
-                                    {item.title}
-                                </td>
-                                <td>
-                                    <input
-                                        type="number"
-                                        name={`${index}-count`}
-                                        value={item.count}
-                                        min={1}
-                                        step={1}
-                                        onKeyDown={handleCountKeyDown}
-                                        onFocus={handleInputFocus}
-                                        onChange={(e) => handleInputChange(index, "count", e.target.value)}
-                                    />
-                                </td>
-                                <td>
-                                    <StatusBtn name={`${index}-status`} status={item.status}
-                                        setStatus={(status) => setStatus(index, status)}/>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                <ProductsTable invoice={invoice} products={products} setProducts={setProducts}
+                    invalidFields={invalidFields}/>
             </div>
         </form>
     )
