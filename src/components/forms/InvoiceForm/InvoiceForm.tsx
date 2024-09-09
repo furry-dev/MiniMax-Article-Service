@@ -2,7 +2,7 @@
 
 import styles from "./InvoiceForm.module.sass"
 import {InvoiceWithId, ProductEntity, ProductStatus} from "@/utils/InvoiceManager/Invoice.interfaces"
-import StatusBtn from "@/components/screens/Invoice/StatusBtn/StatusBtn"
+import StatusBtn from "@/components/forms/InvoiceForm/StatusBtn/StatusBtn"
 import React, {useEffect, useRef, useState} from "react"
 import {InvoiceManager} from "@/utils/InvoiceManager/InvoiceManager"
 import toast from "react-hot-toast"
@@ -115,6 +115,8 @@ export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
             try {
                 const productData = await getProduct(formData)
                 const productTitle = productData?.name || ""
+
+                console.log(productTitle)
 
                 setProducts(prevProducts =>
                     prevProducts.map((product, i) =>
