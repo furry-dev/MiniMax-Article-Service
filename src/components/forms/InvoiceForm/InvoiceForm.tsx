@@ -6,6 +6,7 @@ import StatusBtn from "@/components/screens/Invoice/StatusBtn/StatusBtn"
 import React, {useEffect, useRef, useState} from "react"
 import {InvoiceManager} from "@/utils/InvoiceManager/InvoiceManager"
 import toast from "react-hot-toast"
+import {getProduct} from "@/utils/livesearch"
 
 export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
     const [products, setProducts] = useState<ProductEntity[]>(invoice.products || [])
@@ -70,9 +71,11 @@ export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
         if (invalidIndexes.length > 0) return
 
         InvoiceManager.updateInvoiceProducts(invoice.id, products.filter(value => value.article > 0))
+
     }, [invoice.closedAt, invoice.id, products])
 
     const setStatus = (index: number, status: ProductStatus) => {
+
         if (invoice.closedAt) return
 
         setProducts(prevProducts =>
@@ -82,7 +85,7 @@ export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
         )
     }
 
-    const handleInputChange = (index: number, field: keyof ProductEntity, value: string | number) => {
+    const handleInputChange = async (index: number, field: keyof ProductEntity, value: string | number) => {
         if (invoice.closedAt) return
 
         setProducts(prevProducts => {
@@ -104,6 +107,24 @@ export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
 
             return updatedProducts
         })
+
+        if (field === "article" && value) {
+            const formData = new FormData()
+            formData.set("article", value.toString())
+
+            try {
+                const productData = await getProduct(formData)
+                const productTitle = productData?.name || ""
+
+                setProducts(prevProducts =>
+                    prevProducts.map((product, i) =>
+                        i === index ? {...product, title: productTitle} : product
+                    )
+                )
+            } catch (error) {
+                console.error("Ошибка при получении названия продукта:", error)
+            }
+        }
     }
 
     const tabulationOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -198,7 +219,7 @@ export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
                                     <input
                                         type="number"
                                         name={`${index}-article`}
-                                        value={item.article}
+                                        value={item.article === 0 ? "" : item.article}
                                         min={0}
                                         step={1}
                                         onKeyDown={handleArticleKeyDown}
