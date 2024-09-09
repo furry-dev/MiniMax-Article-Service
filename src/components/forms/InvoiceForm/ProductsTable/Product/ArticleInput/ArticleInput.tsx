@@ -14,17 +14,28 @@ export default function ArticleInput({tabulationOnEnter, containerRef, ...props}
             const inputs = Array.from(containerRef.current.querySelectorAll("input[name$='-article']")) as HTMLInputElement[]
             const index = inputs.indexOf(activeElement as HTMLInputElement)
 
+            const nextArticle = () => {
+                inputs[index + 1].focus()
+                e.preventDefault()
+            }
+
             if (e.key === "ArrowUp" && index > 0) {
                 inputs[index - 1].focus()
                 e.preventDefault()
             } else if (e.key === "ArrowDown" && index < inputs.length - 1) {
-                inputs[index + 1].focus()
-                e.preventDefault()
+                nextArticle()
             } else if (e.key === "Enter") {
                 tabulationOnEnter(e)
             } else if (e.ctrlKey && e.code === "KeyC") {
                 toast.success("Артикул скопійовано")
-            } else if (!/[0-9]/.test(e.key) && e.key !== "Backspace" && e.key !== "Tab" && e.key !== "ArrowRight" && e.key !== "ArrowLeft") {
+                if (index < inputs.length - 2) {
+                    nextArticle()
+                } else {
+                    const closeInvoiceBtn = document.getElementById("closeInvoiceBtn")
+
+                    if (closeInvoiceBtn instanceof HTMLButtonElement) closeInvoiceBtn.focus()
+                }
+            } else if (!/[0-9]/.test(e.key) && e.key !== "Backspace" && e.key !== "Tab" && e.key !== "ArrowRight" && e.key !== "ArrowLeft" && !(e.ctrlKey && e.code === "KeyA")) {
                 e.preventDefault()
             }
         }

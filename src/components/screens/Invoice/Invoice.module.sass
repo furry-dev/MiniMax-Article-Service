@@ -4,7 +4,7 @@
       margin-right: min(calc(100vw - 480px), 500px, 100vw)
 
       .addButton
-        right: min(calc(100vw - 480px), 500px, 100vw)
+        right: calc(min(calc(100vw - 480px), 500px, 100vw) + 20px)
 
     .addButton
       position: fixed
@@ -39,6 +39,9 @@
 
       &:hover, &:focus
         background-color: #ff4b4b
+
+      &:focus
+        border: 2px solid dodgerblue
 
 @media (max-width: 880px)
   .main

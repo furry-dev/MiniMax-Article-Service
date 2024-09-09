@@ -25,6 +25,7 @@ export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
         const keyboardControl = (e: KeyboardEvent) => {
             switch (e.code) {
             case "KeyA":
+                if (e.ctrlKey) return
                 const firstInput = formRef?.current?.querySelector("input")
                 if (firstInput instanceof HTMLInputElement) {
                     firstInput.focus()

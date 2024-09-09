@@ -46,6 +46,7 @@ export default function Invoice({invoiceId}: { invoiceId?: string }) {
                         <button
                             className={styles.closeInvoiceBtn}
                             onClick={closeInvoiceHandler}
+                            id={"closeInvoiceBtn"}
                         >
                             Закрити накладну
                         </button>
