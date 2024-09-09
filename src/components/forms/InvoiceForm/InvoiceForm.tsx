@@ -55,8 +55,11 @@ export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
 
         if (invalidIndexes.length > 0) return
 
-        InvoiceManager.updateInvoiceProducts(invoice.id, products.filter(value => value.article > 0))
+        const timer = setTimeout(() => {
+            InvoiceManager.updateInvoiceProducts(invoice.id, products.filter(value => value.article > 0))
+        }, 1000)
 
+        return () => clearTimeout(timer)
     }, [invoice.closedAt, invoice.id, products])
 
 
