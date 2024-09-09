@@ -1,5 +1,3 @@
-"use client"
-
 import React, {SetStateAction} from "react"
 
 import styles from "./StatusBtn.module.sass"
@@ -7,6 +5,7 @@ import {ProductEntity, ProductStatus} from "@/utils/InvoiceManager/Invoice.inter
 
 interface StatusBtnProps {
     index: number
+    closed?: boolean
     product: ProductEntity
     setProducts: React.Dispatch<SetStateAction<ProductEntity[]>>
     name?: string
@@ -22,6 +21,7 @@ const STATUS_LIST: { state: ProductStatus, text: string, color: string }[] = [
 export default function StatusBtn(
     {
         index,
+        closed,
         product,
         setProducts,
         name

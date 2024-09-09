@@ -1,5 +1,5 @@
 import styles from "./Product.module.sass"
-import StatusBtn from "@/components/forms/InvoiceForm/StatusBtn/StatusBtn"
+import StatusBtn from "@/components/forms/InvoiceForm/ProductsTable/Product/StatusBtn/StatusBtn"
 import React, {SetStateAction} from "react"
 import {ProductEntity} from "@/utils/InvoiceManager/Invoice.interfaces"
 import {getProduct} from "@/utils/livesearch"
@@ -105,7 +105,8 @@ export default function Product(
                     onChange={(e) => handleInputChange(index, "count", e.target.value)}/>
             </td>
             <td>
-                <StatusBtn name={`${index}-status`} index={index} product={item} setProducts={setProducts}/>
+                <StatusBtn closed={closed} name={`${index}-status`} index={index} product={item}
+                    setProducts={setProducts}/>
             </td>
         </tr>
     )
