@@ -56,8 +56,6 @@ export default function Product(
                 const productData = await getProduct(formData)
                 const productTitle = productData?.name || ""
 
-                console.log(productTitle)
-
                 setProducts(prevProducts =>
                     prevProducts.map((product, i) =>
                         i === index ? {...product, title: productTitle} : product
