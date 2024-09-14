@@ -31,7 +31,7 @@ export default function Navigation() {
 
     return (
         <nav className={styles.nav} ref={navRef}>
-            <Image className={styles.logo} src={"/mini-max_logo.png"} alt={"logo"} width={69} height={51}/>
+            <Image className={styles.logo} src={"/images/mini-max_logo.png"} alt={"logo"} width={69} height={51}/>
             <ul className={styles.links}>
                 <li>
                     <Link href={"/"} className={styles.navBtn}>

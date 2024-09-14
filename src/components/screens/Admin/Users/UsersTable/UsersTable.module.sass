@@ -1,0 +1,25 @@
+.table
+  width: 100%
+  display: grid
+
+  grid-template-columns: 60px minmax(150px, 6fr) minmax(100px, 1fr)
+
+  thead, tbody, tr
+    display: contents
+
+  thead
+    th
+      padding: 5px
+      border-bottom: 1px solid #3c4144
+      border-right: 1px dotted #3c4144
+
+      &:last-child
+        border-right: none
+
+  tbody
+    td
+      border-bottom: 1px dotted #3c4144
+      border-right: 1px dotted #3c4144
+
+      &:last-child
+        border-right: none

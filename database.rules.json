@@ -2,9 +2,10 @@
   "rules": {
     ".read": "now < 1727298000000",
     ".write": "now < 1727298000000",
-    "invoices": {
+      "invoices": {
       ".indexOn": [
-        "closedAt"
+        "closedAt",
+        "name"
       ],
       ".read": true,
       ".write": true
