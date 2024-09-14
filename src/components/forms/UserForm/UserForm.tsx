@@ -19,11 +19,15 @@ interface UserFormProps {
 }
 
 export default function UserForm({user, className}: UserFormProps) {
-    const [userData, setUserData] = useState<UserEntity>(user || {
-        name: "",
-        password: Math.random().toString(36).slice(-8),
-        role: "consultant",
-    })
+    const [userData, setUserData] = useState<UserEntity>(user ?
+        {
+            ...user,
+            password: ""
+        } : {
+            name: "",
+            password: Math.random().toString(36).slice(-8),
+            role: "consultant",
+        })
 
     const router = useRouter()
 
@@ -93,10 +97,19 @@ export default function UserForm({user, className}: UserFormProps) {
         const formData = new FormData(e.target as HTMLFormElement)
         if ((formData.get("avatar") as File).size < 1) formData.delete("avatar")
 
-        if (!formData.get("name") || !formData.get("password") || !formData.get("role")) return toast.error("Не всі поля заповнені!")
+        if (!formData.get("name") || (!formData.get("password") && !user?.id) || !formData.get("role")) return toast.error("Не всі поля заповнені!")
 
         if (user?.id) {
+            if (userData.password.length < 1) formData.delete("password")
+            formData.set("id", user.id)
 
+            toast.promise(UserManager.UpdateUser(formData), {
+                loading: "Збереження...",
+                success: "Зміни збережено!",
+                error: "Невідома помилка!"
+            }).then(value => {
+                window.location.reload()
+            })
         } else {
             toast.promise(UserManager.CreateUser(formData), {
                 loading: "Збереження...",
@@ -114,7 +127,7 @@ export default function UserForm({user, className}: UserFormProps) {
                 <label className={styles.avatarInput}>
                     <Image
                         className={styles.avatarImage}
-                        src={userData.avatar || "/images/avatars/empty-avatar.png"}
+                        src={`/images/avatars/${userData.avatar || "empty-avatar.png"}`}
                         alt={"avatar"}
                         width={80}
                         height={80}/>
