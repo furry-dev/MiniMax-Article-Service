@@ -137,9 +137,7 @@ export async function UpdateUser(formData: FormData) {
         const userDocRef = doc(db2, "users", updateUserDto.id)
         const userDocSnap = await getDoc(userDocRef)
 
-        if (!userDocSnap.exists()) {
-            throw new Error(`User with ID ${updateUserDto.id} not found`)
-        }
+        if (!userDocSnap.exists()) return false
 
         const existingUserData = await GetUser(updateUserDto.id)
         if (!existingUserData) return false

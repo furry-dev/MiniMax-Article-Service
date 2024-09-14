@@ -107,7 +107,7 @@ export default function UserForm({user, className}: UserFormProps) {
                 loading: "Збереження...",
                 success: "Зміни збережено!",
                 error: "Невідома помилка!"
-            }).then(value => {
+            }).then(() => {
                 window.location.reload()
             })
         } else {
