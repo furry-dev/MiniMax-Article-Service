@@ -3,6 +3,8 @@ import {UserEntityWithId} from "@/utils/UserManager/User.interfaces"
 import {GetUser} from "@/utils/UserManager/UserManager"
 import {notFound} from "next/navigation"
 
+import styles from "./User.module.sass"
+
 export default async function User({userId}: { userId?: string }) {
     let user: UserEntityWithId | undefined = undefined
 
@@ -12,9 +14,9 @@ export default async function User({userId}: { userId?: string }) {
     }
 
     return (
-        <div>
-            <small>Користувач: {userId}</small>
-            <UserForm user={user}/>
+        <div className={styles.user}>
+            <small className={styles.userId}>Користувач: {userId}</small>
+            <UserForm className={styles.form} user={user}/>
         </div>
     )
 }
