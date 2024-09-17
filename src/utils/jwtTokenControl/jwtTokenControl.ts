@@ -1,0 +1,37 @@
+import * as jose from "jose"
+import {cookies} from "next/headers"
+import {UserEntityWithId} from "@/utils/UserManager/User.interfaces"
+import jwt from "jsonwebtoken"
+
+const jwtConfig = {
+    secret: new TextEncoder().encode(process.env.JWT_SECRET)
+}
+
+export function createToken(user: UserEntityWithId) {
+    return jwt.sign({
+        uid: user.id,
+        name: user.name,
+        avatar: user.avatar,
+        role: user.role
+    }, process.env.JWT_SECRET as string, {expiresIn: "1d"})
+}
+
+export async function decodeToken() {
+    let token = cookies().get("token")?.value as string | undefined
+
+    if (token) {
+        try {
+            if (token.startsWith("Bearer")) {
+                token = token.replace("Bearer ", "")
+            }
+
+            return await jose.jwtVerify(token, jwtConfig.secret)
+        } catch (err) {
+            console.error("isAuthenticated error: ", err)
+
+            return false
+        }
+    } else {
+        return false
+    }
+}
