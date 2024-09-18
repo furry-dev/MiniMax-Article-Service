@@ -19,7 +19,9 @@ export async function Login(formData: FormData) {
 
 async function loginUser(uid: string, password: string) {
     try {
-        const userData = await UserManager.GetUser(uid)
+        const formData = new FormData()
+        formData.set("uid", uid)
+        const userData = await UserManager.GetUser(formData)
 
         if (!userData) return undefined
 

@@ -9,7 +9,9 @@ export default async function User({userId}: { userId?: string }) {
     let user: UserEntityWithId | undefined = undefined
 
     if (userId) {
-        user = await GetUser(userId)
+        const userData = new FormData()
+        userData.set("uid", userId)
+        user = await GetUser(userData)
         if (!user) return notFound()
     }
 

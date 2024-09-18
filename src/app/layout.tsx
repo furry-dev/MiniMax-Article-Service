@@ -21,7 +21,7 @@ export default async function RootLayout({
 }>) {
     const decoded = await decodeToken()
 
-    const user = decoded ? decoded.payload as UserContextEntity : null
+    const user = decoded ? decoded.payload as unknown as UserContextEntity : null
 
     return (
         <html lang="en">
