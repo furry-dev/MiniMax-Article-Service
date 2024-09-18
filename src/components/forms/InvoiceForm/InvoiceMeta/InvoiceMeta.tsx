@@ -23,7 +23,7 @@ export default function InvoiceMeta({invoice}: { invoice: InvoiceWithId }) {
     return (
         <div className={styles.meta}>
             <h2>{invoice.name} | <small>id: {invoice.id}</small></h2>
-            <span>Створено: {user?.name}{user?.role && <>({USER_ROLES_DICT[user?.role]})</>}</span>
+            <span>Створено: {user && <>{user.name}({USER_ROLES_DICT[user.role]})</>}</span>
             <span>Всього позицій: {invoice.products?.length || 0}</span>
             {invoice.closedAt &&
                 <small className={styles.closed}>Closed at: {new Date(invoice.closedAt).toLocaleString()}</small>}
