@@ -10,9 +10,13 @@ import {InvoiceWithId} from "@/utils/InvoiceManager/Invoice.interfaces"
 import {InvoiceManager} from "@/utils/InvoiceManager/InvoiceManager"
 import toast from "react-hot-toast"
 import {useRouter} from "next/navigation"
+import {useUser} from "@/context/UserContext"
+import {userIsCashbox, userIsConsultant} from "@/utils/userRoles"
 
 export default function Invoice({invoiceId}: { invoiceId?: string }) {
     const [invoice, setInvoice] = useState<InvoiceWithId | null>(null)
+
+    const user = useUser()
 
     const router = useRouter()
 
@@ -37,12 +41,12 @@ export default function Invoice({invoiceId}: { invoiceId?: string }) {
         <main className={styles.main}>
             <div className={`${styles.list} ${invoiceId ? styles.activeInvoice : ""}`}>
                 <InvoicesList/>
-                <NewInvoiceBtn className={styles.addButton}/>
+                {userIsConsultant(user) && <NewInvoiceBtn className={styles.addButton}/>}
             </div>
             {invoiceId && (
                 <div className={styles.form}>
                     {invoice && <InvoiceForm invoice={invoice}/>}
-                    {!invoice?.closedAt && (
+                    {(!invoice?.closedAt && userIsCashbox(user)) && (
                         <button
                             className={styles.closeInvoiceBtn}
                             onClick={closeInvoiceHandler}

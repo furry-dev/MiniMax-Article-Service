@@ -4,7 +4,7 @@ import {UserEntityWithId} from "@/utils/UserManager/User.interfaces"
 import jwt from "jsonwebtoken"
 
 const jwtConfig = {
-    secret: new TextEncoder().encode(process.env.JWT_SECRET)
+    secret: new TextEncoder().encode(process.env.NEXT_PUBLIC_JWT_SECRET)
 }
 
 export function createToken(user: UserEntityWithId) {
@@ -13,18 +13,14 @@ export function createToken(user: UserEntityWithId) {
         name: user.name,
         avatar: user.avatar,
         role: user.role
-    }, process.env.JWT_SECRET as string, {expiresIn: "1d"})
+    }, process.env.NEXT_PUBLIC_JWT_SECRET as string, {expiresIn: "1d"})
 }
 
 export async function decodeToken() {
-    let token = cookies().get("token")?.value as string | undefined
+    const token = cookies().get("token")?.value as string | undefined
 
     if (token) {
         try {
-            if (token.startsWith("Bearer")) {
-                token = token.replace("Bearer ", "")
-            }
-
             return await jose.jwtVerify(token, jwtConfig.secret)
         } catch (err) {
             console.error("isAuthenticated error: ", err)

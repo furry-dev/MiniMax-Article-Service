@@ -25,8 +25,11 @@ export async function GetUsers() {
     }
 }
 
-export async function GetUser(userId: string) {
+export async function GetUser(formData: FormData) {
     try {
+        const userId = formData.get("uid") as string | null
+        if (!userId) return undefined
+
         const docSnap = await getDoc(doc(db2, "users", userId))
 
         if (docSnap.exists()) {
@@ -139,7 +142,10 @@ export async function UpdateUser(formData: FormData) {
 
         if (!userDocSnap.exists()) return false
 
-        const existingUserData = await GetUser(updateUserDto.id)
+        const userData = new FormData()
+        userData.set("uid", updateUserDto.id)
+
+        const existingUserData = await GetUser(userData)
         if (!existingUserData) return false
 
         if (updateUserDto.password) {

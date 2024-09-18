@@ -92,7 +92,7 @@ export class InvoiceManager {
         }
     }
 
-    static async createInvoice() {
+    static async createInvoice(uid: string) {
         try {
             const invoicesSnapshot = await get(child(ref(db), "invoices"))
             let invoices: InvoiceEntity[] = []
@@ -114,7 +114,8 @@ export class InvoiceManager {
             const newInvoice: InvoiceEntity = {
                 name: newName.toString().padStart(3, "0"),
                 products: [],
-                createdAt: new Date().getTime()
+                createdAt: new Date().getTime(),
+                createBy: uid
             }
 
             const invoiceRef = await push(ref(db, "invoices"), newInvoice)
