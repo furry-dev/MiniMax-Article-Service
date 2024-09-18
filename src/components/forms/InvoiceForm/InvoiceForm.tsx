@@ -6,18 +6,22 @@ import React, {useEffect, useRef, useState} from "react"
 import {InvoiceManager} from "@/utils/InvoiceManager/InvoiceManager"
 import InvoiceMeta from "@/components/forms/InvoiceForm/InvoiceMeta/InvoiceMeta"
 import ProductsTable from "@/components/forms/InvoiceForm/ProductsTable/ProductsTable"
+import {useUser} from "@/context/UserContext"
+import {userIsConsultant} from "@/utils/userRoles"
 
 export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
     const [products, setProducts] = useState<ProductEntity[]>(invoice.products || [])
 
+    const user = useUser()
+
     useEffect(() => {
-        if (!invoice.closedAt) {
+        if (!invoice.closedAt && userIsConsultant(user)) {
             setProducts([
                 ...(invoice.products || []),
                 {article: 0, title: "", count: 1, status: "Assembly"}
             ])
         }
-    }, [invoice])
+    }, [invoice, user])
 
     const formRef = useRef<HTMLFormElement | null>(null)
 
@@ -45,7 +49,7 @@ export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
     const [invalidFields, setInvalidFields] = useState<number[]>([])
 
     useEffect(() => {
-        if (invoice.closedAt) return
+        if (invoice.closedAt || !userIsConsultant(user)) return
 
         const invalidIndexes: number[] = products
             .map((product, index) => (product.count < 1 ? index : -1))
@@ -60,7 +64,7 @@ export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
         }, 1000)
 
         return () => clearTimeout(timer)
-    }, [invoice.closedAt, invoice.id, products])
+    }, [invoice.closedAt, invoice.id, products, user])
 
 
     return (

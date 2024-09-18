@@ -2,6 +2,8 @@ import styles from "./ProductsTable.module.sass"
 import React, {SetStateAction, useEffect, useRef, useState} from "react"
 import {InvoiceWithId, ProductEntity} from "@/utils/InvoiceManager/Invoice.interfaces"
 import Product from "@/components/forms/InvoiceForm/ProductsTable/Product/Product"
+import {useUser} from "@/context/UserContext"
+import {userIsConsultant} from "@/utils/userRoles"
 
 interface ProductsTableProps {
     invoice: InvoiceWithId
@@ -33,6 +35,8 @@ export default function ProductsTable({
 
     const containerRef = useRef<HTMLTableElement | null>(null)
 
+    const user = useUser()
+
     return (
         <table className={styles.namesTable} ref={containerRef}>
             <colgroup>
@@ -57,7 +61,7 @@ export default function ProductsTable({
                         key={index}
                         item={item}
                         index={index}
-                        closed={Boolean(invoice.closedAt)}
+                        closed={Boolean(invoice.closedAt) || !userIsConsultant(user)}
                         containerRef={containerRef}
                         setProducts={setProducts}
                         invalid={invalidFields.includes(index)}

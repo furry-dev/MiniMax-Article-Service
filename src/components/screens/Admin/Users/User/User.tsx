@@ -1,0 +1,24 @@
+import UserForm from "@/components/forms/UserForm/UserForm"
+import {UserEntityWithId} from "@/utils/UserManager/User.interfaces"
+import {GetUser} from "@/utils/UserManager/UserManager"
+import {notFound} from "next/navigation"
+
+import styles from "./User.module.sass"
+
+export default async function User({userId}: { userId?: string }) {
+    let user: UserEntityWithId | undefined = undefined
+
+    if (userId) {
+        const userData = new FormData()
+        userData.set("uid", userId)
+        user = await GetUser(userData)
+        if (!user) return notFound()
+    }
+
+    return (
+        <div className={styles.user}>
+            <small className={styles.userId}>Користувач: {userId}</small>
+            <UserForm className={styles.form} user={user}/>
+        </div>
+    )
+}

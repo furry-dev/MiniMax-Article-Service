@@ -16,6 +16,7 @@ export interface InvoiceEntity {
     products?: ProductEntity[],
     createdAt: number,
     closedAt?: number,
+    createBy: string
 }
 
 export interface InvoiceWithId extends InvoiceEntity {
