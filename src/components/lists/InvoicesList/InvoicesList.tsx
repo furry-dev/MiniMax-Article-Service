@@ -3,7 +3,7 @@
 import {InvoiceWithId} from "@/utils/InvoiceManager/Invoice.interfaces"
 import InvoiceCard from "@/components/cards/InvoiceCard/InvoiceCard"
 import styles from "./InvoicesList.module.sass"
-import {useEffect, useState} from "react"
+import {useEffect, useRef, useState} from "react"
 import {InvoiceManager} from "@/utils/InvoiceManager/InvoiceManager"
 import Link from "next/link"
 
@@ -15,6 +15,19 @@ export default function InvoicesList({type, closedAt, pageLimit}: {
     pageLimit?: number
 }) {
     const [invoices, setInvoices] = useState<InvoiceWithId[]>([])
+
+    const listRef = useRef<HTMLUListElement | null>(null)
+
+    useEffect(() => {
+        const keyboardHandler = (e: KeyboardEvent) => {
+            if (e.code === "KeyZ") {
+                listRef.current?.querySelector("a")?.focus()
+            }
+        }
+
+        document.addEventListener("keydown", keyboardHandler)
+        return () => document.removeEventListener("keydown", keyboardHandler)
+    }, [])
 
     useEffect(() => {
         if (type === "Archive") {
@@ -31,7 +44,7 @@ export default function InvoicesList({type, closedAt, pageLimit}: {
     }
 
     return (
-        <ul className={styles.list}>
+        <ul className={styles.list} ref={listRef}>
             {invoices.map((invoice, index) => (
                 <li key={index}>
                     <InvoiceCard invoice={invoice}/>

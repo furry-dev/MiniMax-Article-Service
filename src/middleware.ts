@@ -1,4 +1,3 @@
-// middleware/auth.ts
 import {cookies} from "next/headers"
 import {NextRequest, NextResponse} from "next/server"
 import {decodeToken} from "@/utils/jwtTokenControl/jwtTokenControl"
@@ -9,7 +8,6 @@ export async function middleware(req: NextRequest) {
     const token = cookies().get("token")?.value as string | undefined
 
     if (!token) {
-        console.log(`token: ${token}`)
         return NextResponse.redirect(new URL("/login", req.url))
     }
 
