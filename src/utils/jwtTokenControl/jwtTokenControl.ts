@@ -4,7 +4,7 @@ import {UserEntityWithId} from "@/utils/UserManager/User.interfaces"
 import jwt from "jsonwebtoken"
 
 const jwtConfig = {
-    secret: new TextEncoder().encode(process.env.NEXT_PUBLIC_JWT_SECRET)
+    secret: new TextEncoder().encode(process.env.JWT_SECRET)
 }
 
 export function createToken(user: UserEntityWithId) {
@@ -13,7 +13,7 @@ export function createToken(user: UserEntityWithId) {
         name: user.name,
         avatar: user.avatar,
         role: user.role
-    }, process.env.NEXT_PUBLIC_JWT_SECRET as string, {expiresIn: "1d"})
+    }, process.env.JWT_SECRET as string, {expiresIn: "1d"})
 }
 
 export async function decodeToken() {
