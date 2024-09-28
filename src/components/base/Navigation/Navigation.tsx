@@ -5,6 +5,7 @@ import styles from "./Navigation.module.sass"
 import {useEffect, useRef} from "react"
 import Link from "next/link"
 import {useUser} from "@/context/UserContext"
+import {userIsAdmin, userIsCashbox, userIsConsultant, userIsDeveloper} from "@/utils/userRoles"
 
 export default function Navigation() {
     const navRef = useRef<HTMLElement | null>(null)
@@ -30,21 +31,14 @@ export default function Navigation() {
         return () => {
             window.removeEventListener("resize", changeWindowSize)
         }
-    })
-
-    console.log(user?.role)
+    }, [])
 
     return (
         <nav className={styles.nav} ref={navRef}>
             <Image className={styles.logo} src={"/images/mini-max_logo.png"} alt={"logo"} width={69} height={51}/>
             <ul className={styles.links}>
                 {
-                    (
-                        user?.role === "consultant" ||
-                        user?.role === "cashbox" ||
-                        user?.role === "admin" ||
-                        user?.role === "developer"
-                    ) && (
+                    (userIsCashbox(user) || userIsConsultant(user)) && (
                         <li>
                             <Link href={"/"} className={styles.navBtn}>
                                 <Image src={"/icons/invoice.png"} alt={"invoices"} width={32} height={32}/>
@@ -54,16 +48,23 @@ export default function Navigation() {
                     )
                 }
                 {
-                    (
-                        user?.role === "consultant" ||
-                        user?.role === "labeler" ||
-                        user?.role === "admin" ||
-                        user?.role === "developer"
-                    ) && (
+                    // (userIsConsultant(user) || userIsLabeler(user))
+                    (userIsDeveloper(user))
+                    && (
                         <li>
                             <Link href={"/revaluation"} className={styles.navBtn}>
                                 <Image src={"/icons/revaluation.png"} alt={"revaluation"} width={32} height={32}/>
                                 Переоцінка
+                            </Link>
+                        </li>
+                    )
+                }
+                {
+                    (userIsAdmin(user)) && (
+                        <li>
+                            <Link href={"/admin"} className={styles.navBtn}>
+                                <Image src={"/icons/admin-settings.png"} alt={"admin"} width={32} height={32}/>
+                                Адмінка
                             </Link>
                         </li>
                     )
