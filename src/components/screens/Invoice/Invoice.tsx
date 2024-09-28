@@ -44,6 +44,8 @@ export default function Invoice({invoiceId}: { invoiceId?: string }) {
     const payInvoiceHandler = () => {
         if (!invoiceId) return
 
+        if (!invoice?.products || invoice.products.length === 0) return toast.error("Список не містить жодної позиції!")
+
         toast.promise(
             InvoiceManager.payInvoice(invoiceId),
             {
@@ -72,8 +74,12 @@ export default function Invoice({invoiceId}: { invoiceId?: string }) {
     const closeInvoiceHandler = async () => {
         if (!invoiceId || !invoice) return
 
+        if (!invoice.paidAt) return toast.error("Список не проплачено!")
+
+        if (!invoice.products || invoice.products.length === 0) return toast.error("Список не містить жодної позиції!")
+
         const changeStatusAndCloseInvoiceHandler = () => {
-            if (!invoice.products) return toast.error("Список не містить жодної позиції!")
+            if (!invoice.products || invoice.products.length === 0) return toast.error("Список не містить жодної позиції!")
 
             const updatedProducts: ProductEntity[] = invoice.products.map(product => ({
                 ...product,
