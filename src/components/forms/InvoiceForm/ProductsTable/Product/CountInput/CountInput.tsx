@@ -9,11 +9,13 @@ export default function CountInput({tabulationOnEnter, ...props}: CountInputProp
     const handleCountKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
             tabulationOnEnter(e)
-        } else if (e.ctrlKey && e.code === "KeyC") {
-            toast.success("Кількість скопійовано")
-        } else if (!/[0-9]/.test(e.key) && e.key !== "ArrowUp" && e.key !== "ArrowDown" && e.key !== "Backspace" && e.key !== "Tab") {
+        } else if (!/[0-9]/.test(e.key) && e.key !== "ArrowUp" && e.key !== "ArrowDown" && e.key !== "Backspace" && e.key !== "Tab" && !(e.ctrlKey && e.code === "KeyA") && !(e.ctrlKey && e.code === "KeyC")) {
             e.preventDefault()
         }
+    }
+
+    const onCopyHandler = () => {
+        toast.success("Кількість скопійовано")
     }
 
     const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -27,6 +29,7 @@ export default function CountInput({tabulationOnEnter, ...props}: CountInputProp
             step={1}
             onKeyDown={handleCountKeyDown}
             onFocus={handleInputFocus}
+            onCopy={onCopyHandler}
             {...props}
         />
     )

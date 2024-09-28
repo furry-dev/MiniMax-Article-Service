@@ -16,7 +16,6 @@ export default function ArticleInput({tabulationOnEnter, containerRef, ...props}
 
             const nextArticle = () => {
                 inputs[index + 1].focus()
-                e.preventDefault()
             }
 
             if (e.key === "ArrowUp" && index > 0) {
@@ -24,19 +23,28 @@ export default function ArticleInput({tabulationOnEnter, containerRef, ...props}
                 e.preventDefault()
             } else if (e.key === "ArrowDown" && index < inputs.length - 1) {
                 nextArticle()
+                e.preventDefault()
             } else if (e.key === "Enter") {
                 tabulationOnEnter(e)
-            } else if (e.ctrlKey && e.code === "KeyC") {
-                toast.success("Артикул скопійовано")
-                if (index < inputs.length - 2) {
-                    nextArticle()
-                } else {
-                    const closeInvoiceBtn = document.getElementById("payInvoiceBtn")
-
-                    if (closeInvoiceBtn instanceof HTMLButtonElement) closeInvoiceBtn.focus()
-                }
-            } else if (!/[0-9]/.test(e.key) && e.key !== "Backspace" && e.key !== "Tab" && e.key !== "ArrowRight" && e.key !== "ArrowLeft" && !(e.ctrlKey && e.code === "KeyA")) {
+            } else if (!/[0-9]/.test(e.key) && e.key !== "Backspace" && e.key !== "Tab" && e.key !== "ArrowRight" && e.key !== "ArrowLeft" && !(e.ctrlKey && e.code === "KeyA") && !(e.ctrlKey && e.code === "KeyC")) {
                 e.preventDefault()
+            }
+        }
+    }
+
+    const onCopyHandler = (e: React.ClipboardEvent<HTMLInputElement>) => {
+        const target = e.target
+
+        if (target instanceof HTMLInputElement && containerRef?.current) {
+            const inputs = Array.from(containerRef.current.querySelectorAll("input[name$='-article']")) as HTMLInputElement[]
+            const index = inputs.indexOf(target)
+            toast.success("Артикул скопійовано")
+            if (index < inputs.length - 1) {
+                inputs[index + 1].focus()
+            } else {
+                const button = document.getElementById("payInvoiceBtn") || document.getElementById("closeInvoiceBtn")
+
+                if (button instanceof HTMLButtonElement) button.focus()
             }
         }
     }
@@ -52,6 +60,7 @@ export default function ArticleInput({tabulationOnEnter, containerRef, ...props}
             step={1}
             onKeyDown={handleArticleKeyDown}
             onFocus={handleInputFocus}
+            onCopy={onCopyHandler}
             {...props}
         />
     )

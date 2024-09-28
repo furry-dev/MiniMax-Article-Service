@@ -15,10 +15,15 @@ export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
     const user = useUser()
 
     useEffect(() => {
-        if (!invoice.closedAt && userIsConsultant(user)) {
+        if (!invoice.closedAt) {
             setProducts([
                 ...(invoice.products || []),
-                {article: 0, title: "", count: 1, status: "Assembly"}
+                ...(userIsConsultant(user) ? [{
+                    article: 0,
+                    title: "",
+                    count: 1,
+                    status: "Assembly"
+                } as ProductEntity] : [])
             ])
         }
     }, [invoice, user])
