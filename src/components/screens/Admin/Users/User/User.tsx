@@ -8,7 +8,7 @@ import styles from "./User.module.sass"
 export default async function User({userId}: { userId?: string }) {
     let user: UserEntityWithId | undefined = undefined
 
-    if (userId) {
+    if (userId && userId !== "new") {
         const userData = new FormData()
         userData.set("uid", userId)
         user = await GetUser(userData)
