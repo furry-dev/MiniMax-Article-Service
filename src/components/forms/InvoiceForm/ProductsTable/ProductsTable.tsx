@@ -62,6 +62,7 @@ export default function ProductsTable({
                         item={item}
                         index={index}
                         closed={Boolean(invoice.closedAt) || !userIsConsultant(user)}
+                        paid={Boolean(invoice.paidAt) || !userIsConsultant(user)}
                         containerRef={containerRef}
                         setProducts={setProducts}
                         invalid={invalidFields.includes(index)}

@@ -9,6 +9,7 @@ import ArticleInput from "@/components/forms/InvoiceForm/ProductsTable/Product/A
 interface ProductProps {
     index: number
     closed?: boolean,
+    paid?: boolean,
     item: ProductEntity
     containerRef: React.MutableRefObject<HTMLElement | null>
     setProducts: React.Dispatch<SetStateAction<ProductEntity[]>>
@@ -19,6 +20,7 @@ export default function Product(
     {
         index,
         closed,
+        paid,
         item,
         containerRef,
         setProducts,
@@ -26,7 +28,7 @@ export default function Product(
     }: ProductProps
 ) {
     const handleInputChange = async (index: number, field: keyof ProductEntity, value: string | number) => {
-        if (closed) return
+        if (paid) return
 
         setProducts(prevProducts => {
             let updatedProducts = prevProducts.map((product, i) =>

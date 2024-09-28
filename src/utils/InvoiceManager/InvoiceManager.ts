@@ -127,15 +127,24 @@ export class InvoiceManager {
         }
     }
 
-    static updateInvoiceProducts(invoiceId: string, updatedProducts: ProductEntity[]) {
-        const invoiceRef = ref(db, `invoices/${invoiceId}`)
-        update(invoiceRef, {products: updatedProducts})
-            .then(() => {
-                console.log("Products updated successfully")
-            })
-            .catch((error) => {
-                console.error("Error updating products:", error)
-            })
+    static async updateInvoiceProducts(invoiceId: string, updatedProducts: ProductEntity[]) {
+        try {
+            const invoiceRef = ref(db, `invoices/${invoiceId}`)
+            await update(invoiceRef, {products: updatedProducts})
+        } catch (error) {
+            console.error("Error updating products:", error)
+            throw error
+        }
+    }
+
+    static async payInvoice(invoiceId: string) {
+        try {
+            const invoiceRef = ref(db, `invoices/${invoiceId}`)
+            await update(invoiceRef, {paidAt: new Date().getTime()})
+            console.log("Invoice paid successfully")
+        } catch (error) {
+            console.error("Error paid invoice:", error)
+        }
     }
 
     static async closeInvoice(invoiceId: string) {

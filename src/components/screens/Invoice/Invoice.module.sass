@@ -1,5 +1,9 @@
 .main
   .list
+    display: flex
+    flex-direction: column
+    gap: 10px
+
     &.activeInvoice
       margin-right: min(calc(100vw - 480px), 500px, 100vw)
 
@@ -42,6 +46,53 @@
 
       &:focus
         border: 2px solid dodgerblue
+
+
+.notDeliveredProducts
+  max-height: 70vh
+  overflow-y: auto
+  background-color: #0a0b0b
+
+  table
+    width: 100%
+    border-collapse: collapse
+    table-layout: auto
+
+    display: grid
+    grid-template-columns: minmax(80px, 1fr) 5fr minmax(60px, 1fr) minmax(120px, 2fr)
+
+    thead, tbody, tr
+      display: contents
+
+    thead
+      th
+        padding: 5px
+        border-bottom: 1px solid #3c4144
+        border-right: 1px dotted #3c4144
+
+        text-align: center
+
+        &:last-child
+          border-right: none
+
+    tr
+      &:focus-within
+        background: rgba(150, 150, 150, 0.2)
+
+      &:last-child td
+        border-bottom: none
+
+      td
+        border-bottom: 1px dotted #3c4144
+        border-right: 1px dotted #3c4144
+        padding: 0.2rem 0.5rem
+
+        display: flex
+        align-items: center
+        justify-content: center
+
+        &:last-child
+          border-right: none
 
 @media (max-width: 880px)
   .main

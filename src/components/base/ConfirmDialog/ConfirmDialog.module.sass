@@ -1,0 +1,40 @@
+.window
+  position: fixed
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+  z-index: 999
+
+  width: max-content
+  max-width: min(600px, 95vw)
+
+  display: flex
+  flex-direction: column
+  gap: 15px
+
+  background-color: #141616
+  padding: 20px
+  border-radius: 15px
+
+  box-shadow: 0 0 15px 1px rgba(100, 149, 237, 0.8)
+
+  .title
+    font-size: 18px
+
+  .buttons
+    display: flex
+    align-items: center
+    justify-content: flex-end
+    gap: 15px
+
+    .button
+      padding: 0.5rem 1rem
+
+      border-radius: 50px
+      background-color: limegreen
+      color: white
+
+      border: none
+      outline: none
+
+      cursor: pointer

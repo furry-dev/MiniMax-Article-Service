@@ -11,7 +11,7 @@ interface StatusBtnProps {
     name?: string
 }
 
-const STATUS_LIST: { state: ProductStatus, text: string, color: string }[] = [
+export const STATUS_LIST: { state: ProductStatus, text: string, color: string }[] = [
     {state: "Assembly", text: "Збирається", color: "red"},
     {state: "Assembled", text: "Зібрано", color: "orange"},
     {state: "Delivered", text: "Видано", color: "green"}

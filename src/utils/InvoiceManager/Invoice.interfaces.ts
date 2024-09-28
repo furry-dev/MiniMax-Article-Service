@@ -4,18 +4,19 @@ export interface ProductEntity {
     article: number
     title: string
     count: number
-    status: ProductStatus,
+    status: ProductStatus
     history?: {
-        title: string,
-        date: number,
+        title: string
+        date: number
     }
 }
 
 export interface InvoiceEntity {
-    name: string,
-    products?: ProductEntity[],
-    createdAt: number,
-    closedAt?: number,
+    name: string
+    products?: ProductEntity[]
+    createdAt: number
+    paidAt?: number
+    closedAt?: number
     createBy: string
 }
 
