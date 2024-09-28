@@ -31,7 +31,7 @@ export default function ArticleInput({tabulationOnEnter, containerRef, ...props}
                 if (index < inputs.length - 2) {
                     nextArticle()
                 } else {
-                    const closeInvoiceBtn = document.getElementById("closeInvoiceBtn")
+                    const closeInvoiceBtn = document.getElementById("payInvoiceBtn")
 
                     if (closeInvoiceBtn instanceof HTMLButtonElement) closeInvoiceBtn.focus()
                 }
