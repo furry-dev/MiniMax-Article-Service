@@ -5,5 +5,31 @@
 
   padding: 0 15px
 
-  .closed
-    color: #ff4b4b
+  .info
+    display: flex
+    justify-content: space-between
+
+    .left
+      display: flex
+      flex-direction: column
+      gap: 10px
+
+      .closed
+        color: #ff4b4b
+
+    .right
+      display: flex
+      align-items: center
+      justify-content: center
+
+      select.type
+        padding: 0.5rem 1rem
+        background: none
+        color: white
+        outline: none
+
+        border: 1px solid #3c4144
+        border-radius: 10px
+
+        appearance: none
+        cursor: pointer

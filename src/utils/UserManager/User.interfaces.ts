@@ -1,7 +1,7 @@
-export type UserRole = "cashbox" | "consultant" | "admin" | "labeler" | "developer"
+export type UserRole = "cashbox" | "wholesale" | "consultant" | "admin" | "labeler" | "developer"
 
 export function isUserRole(role: string): role is UserRole {
-    const validRoles: UserRole[] = ["cashbox", "consultant", "admin", "labeler", "developer"]
+    const validRoles: UserRole[] = ["cashbox", "wholesale", "consultant", "admin", "labeler", "developer"]
     return validRoles.includes(role as UserRole)
 }
 
@@ -18,6 +18,7 @@ export interface UserEntityWithId extends UserEntity {
 
 export const USER_ROLES_DICT: { [key in UserRole]: string } = {
     cashbox: "Каса",
+    wholesale: "Каса(опт)",
     consultant: "Консультант",
     admin: "Адмін",
     labeler: "Лейбелер",

@@ -12,7 +12,7 @@ import {
     startAfter,
     update
 } from "@firebase/database"
-import {InvoiceEntity, InvoiceWithId, ProductEntity} from "@/utils/InvoiceManager/Invoice.interfaces"
+import {InvoiceEntity, InvoiceType, InvoiceWithId, ProductEntity} from "@/utils/InvoiceManager/Invoice.interfaces"
 
 export class InvoiceManager {
     static async getInvoices() {
@@ -113,6 +113,7 @@ export class InvoiceManager {
 
             const newInvoice: InvoiceEntity = {
                 name: newName.toString().padStart(3, "0"),
+                invoiceType: "retail",
                 products: [],
                 createdAt: new Date().getTime(),
                 createBy: uid
@@ -137,6 +138,16 @@ export class InvoiceManager {
         }
     }
 
+    static async changeInvoiceType(invoiceId: string, type: InvoiceType) {
+        try {
+            const invoiceRef = ref(db, `invoices/${invoiceId}`)
+            await update(invoiceRef, {invoiceType: type})
+        } catch (error) {
+            console.error("Error changing invoice type:", error)
+            throw error
+        }
+    }
+
     static async payInvoice(invoiceId: string) {
         try {
             const invoiceRef = ref(db, `invoices/${invoiceId}`)
@@ -157,7 +168,7 @@ export class InvoiceManager {
         }
     }
 
-    static subscribeToInvoices(callback: (invoices: InvoiceWithId[]) => void) {
+    static subscribeToInvoices(callback: (invoices: InvoiceWithId[]) => void, invoiceTypeFilter?: InvoiceType) {
         const invoicesRef = ref(db, "invoices")
 
         const unsubscribe = onValue(invoicesRef, (snapshot) => {
@@ -168,7 +179,12 @@ export class InvoiceManager {
                     ...invoicesData[id]
                 }))
 
-                callback(invoicesList.filter(invoice => !invoice.closedAt))
+                const filteredInvoices = invoicesList.filter(invoice =>
+                    !invoice.closedAt &&
+                    (!invoiceTypeFilter || invoice.invoiceType === invoiceTypeFilter)
+                )
+
+                callback(filteredInvoices)
             } else {
                 callback([])
             }

@@ -10,6 +10,11 @@ export function userIsCashbox(user: UserContextEntity | null): boolean {
     return role === "cashbox" || role === "admin" || role === "developer"
 }
 
+export function userIsWholesale(user: UserContextEntity | null): boolean {
+    const role = user?.role
+    return role === "wholesale" || role === "admin" || role === "developer"
+}
+
 export function userIsLabeler(user: UserContextEntity | null): boolean {
     const role = user?.role
     return role === "labeler" || role === "admin" || role === "developer"
