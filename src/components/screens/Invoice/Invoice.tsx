@@ -144,7 +144,7 @@ export default function Invoice({invoiceId}: { invoiceId?: string }) {
     return (
         <main className={styles.main}>
             <div className={`${styles.list} ${invoiceId ? styles.activeInvoice : ""}`}>
-                <h1>Накладні</h1>
+                <h1>Виписки</h1>
                 <InvoicesList/>
                 {userIsConsultant(user) && <NewInvoiceBtn className={styles.addButton}/>}
             </div>

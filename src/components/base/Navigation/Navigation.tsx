@@ -42,7 +42,7 @@ export default function Navigation() {
                         <li>
                             <Link href={"/"} className={styles.navBtn}>
                                 <Image src={"/icons/invoice.png"} alt={"invoices"} width={32} height={32}/>
-                                Накладні
+                                Виписки
                             </Link>
                         </li>
                     )
