@@ -7,8 +7,8 @@ import {GetUser} from "@/utils/UserManager/UserManager"
 import {USER_ROLES_DICT, UserEntity} from "@/utils/UserManager/User.interfaces"
 import {InvoiceManager} from "@/utils/InvoiceManager/InvoiceManager"
 import toast from "react-hot-toast"
-import {userIsConsultant} from "@/utils/userRoles";
-import {useUser} from "@/context/UserContext";
+import {userIsConsultant} from "@/utils/userRoles"
+import {useUser} from "@/context/UserContext"
 
 export default function InvoiceMeta({invoice}: { invoice: InvoiceWithId }) {
     const [owner, setOwner] = React.useState<UserEntity | null>(null)
