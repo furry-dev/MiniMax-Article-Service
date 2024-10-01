@@ -7,9 +7,13 @@ import {GetUser} from "@/utils/UserManager/UserManager"
 import {USER_ROLES_DICT, UserEntity} from "@/utils/UserManager/User.interfaces"
 import {InvoiceManager} from "@/utils/InvoiceManager/InvoiceManager"
 import toast from "react-hot-toast"
+import {userIsConsultant} from "@/utils/userRoles";
+import {useUser} from "@/context/UserContext";
 
 export default function InvoiceMeta({invoice}: { invoice: InvoiceWithId }) {
-    const [user, setUser] = React.useState<UserEntity | null>(null)
+    const [owner, setOwner] = React.useState<UserEntity | null>(null)
+
+    const user = useUser()
 
     useEffect(() => {
         const userData = new FormData()
@@ -17,7 +21,7 @@ export default function InvoiceMeta({invoice}: { invoice: InvoiceWithId }) {
 
         GetUser(userData).then(value => {
             if (!value) return false
-            setUser(value)
+            setOwner(value)
         })
     }, [invoice.createBy])
 
@@ -41,7 +45,7 @@ export default function InvoiceMeta({invoice}: { invoice: InvoiceWithId }) {
             <h2>{invoice.name} | <small>id: {invoice.id}</small></h2>
             <div className={styles.info}>
                 <div className={styles.left}>
-                    <span>Створено: {user && <>{user.name}({USER_ROLES_DICT[user.role]})</>}</span>
+                    <span>Створено: {owner && <>{owner.name}({USER_ROLES_DICT[owner.role]})</>}</span>
                     <span>Всього позицій: {invoice.products?.length || 0}</span>
                     {invoice.closedAt &&
                         <small className={styles.closed}>Closed
@@ -53,7 +57,7 @@ export default function InvoiceMeta({invoice}: { invoice: InvoiceWithId }) {
                         className={styles.type}
                         value={invoice.invoiceType}
                         onChange={changeInvoiceTypeHandler}
-                        disabled={Boolean(invoice.closedAt)}
+                        disabled={Boolean(invoice.closedAt) || !userIsConsultant(user)}
                     >
                         <option value="retail">Роздріб</option>
                         <option value="wholesale">Опт</option>
