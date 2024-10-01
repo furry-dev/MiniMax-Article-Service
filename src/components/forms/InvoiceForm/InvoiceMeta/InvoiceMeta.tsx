@@ -57,7 +57,7 @@ export default function InvoiceMeta({invoice}: { invoice: InvoiceWithId }) {
                         className={styles.type}
                         value={invoice.invoiceType}
                         onChange={changeInvoiceTypeHandler}
-                        disabled={Boolean(invoice.closedAt) || !userIsConsultant(user)}
+                        disabled={Boolean(invoice.paidAt) || !userIsConsultant(user)}
                     >
                         <option value="retail">Роздріб</option>
                         <option value="wholesale">Опт</option>
