@@ -1,0 +1,16 @@
+.main
+  .list
+    display: flex
+    flex-direction: column
+    gap: 10px
+
+    &.activeInvoice
+      margin-right: min(calc(100vw - 480px), 500px, 100vw)
+
+      .addButton
+        right: calc(min(calc(100vw - 480px), 500px, 100vw) + 20px)
+
+    .addButton
+      position: fixed
+      bottom: 20px
+      right: 20px
