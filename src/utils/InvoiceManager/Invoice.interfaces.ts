@@ -1,4 +1,5 @@
 export type ProductStatus = "Assembly" | "Assembled" | "Delivered"
+export type InvoiceType = "wholesale" | "retail"
 
 export interface ProductEntity {
     article: number
@@ -13,6 +14,7 @@ export interface ProductEntity {
 
 export interface InvoiceEntity {
     name: string
+    invoiceType: InvoiceType
     products?: ProductEntity[]
     createdAt: number
     paidAt?: number
@@ -22,4 +24,8 @@ export interface InvoiceEntity {
 
 export interface InvoiceWithId extends InvoiceEntity {
     id: string
+}
+
+export function isInvoiceType(invoiceType: any): invoiceType is InvoiceType {
+    return ["wholesale", "retail"].includes(invoiceType)
 }
