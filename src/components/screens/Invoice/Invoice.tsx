@@ -11,7 +11,7 @@ import {InvoiceManager} from "@/utils/InvoiceManager/InvoiceManager"
 import toast from "react-hot-toast"
 import {useRouter} from "next/navigation"
 import {useUser} from "@/context/UserContext"
-import {userIsCashbox, userIsConsultant} from "@/utils/userRoles"
+import {userIsCashbox, userIsConsultant, userIsWholesale} from "@/utils/userRoles"
 import useConfirm from "@/components/base/ConfirmDialog/ConfirmDialog"
 import {STATUS_LIST} from "@/components/forms/InvoiceForm/ProductsTable/Product/StatusBtn/StatusBtn"
 
@@ -151,7 +151,7 @@ export default function Invoice({invoiceId}: { invoiceId?: string }) {
             {invoiceId && (
                 <div className={styles.form}>
                     {invoice && <InvoiceForm invoice={invoice}/>}
-                    {(!invoice?.paidAt && userIsCashbox(user)) && (
+                    {(!invoice?.paidAt && (userIsCashbox(user) || userIsWholesale(user))) && (
                         <button
                             className={styles.closeInvoiceBtn}
                             onClick={payInvoiceHandler}
@@ -160,7 +160,7 @@ export default function Invoice({invoiceId}: { invoiceId?: string }) {
                             Сплатити список
                         </button>
                     )}
-                    {(invoice?.paidAt && !invoice?.closedAt && (userIsCashbox(user) || userIsConsultant(user))) && (
+                    {(invoice?.paidAt && !invoice?.closedAt && (userIsCashbox(user) || userIsWholesale(user) || userIsConsultant(user))) && (
                         <button
                             className={styles.closeInvoiceBtn}
                             onClick={closeInvoiceHandler}
