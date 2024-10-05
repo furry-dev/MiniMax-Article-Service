@@ -22,7 +22,8 @@ export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
                     article: 0,
                     title: "",
                     count: 1,
-                    status: "Assembly"
+                    status: "Assembly",
+                    warehouse: "shop"
                 } as ProductEntity] : [])
             ])
         }

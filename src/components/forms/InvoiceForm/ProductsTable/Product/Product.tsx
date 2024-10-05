@@ -43,7 +43,7 @@ export default function Product(
             if (lastProduct.article) {
                 return [
                     ...updatedProducts,
-                    {article: 0, title: "", count: 1, status: "Assembly"}
+                    {article: 0, title: "", count: 1, status: "Assembly", warehouse: "shop"}
                 ]
             }
 
