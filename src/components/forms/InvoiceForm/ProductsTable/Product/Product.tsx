@@ -104,6 +104,12 @@ export default function Product(
                     value={item.count}
                     onChange={(e) => handleInputChange(index, "count", e.target.value)}/>
             </td>
+            <td
+                className={styles.warehouse}
+                style={{backgroundColor: item.warehouse === "warehouse" ? "#1e90ff" : "#FF69B4"}}
+            >
+                {item.warehouse === "warehouse" ? "С" : "М"}
+            </td>
             <td>
                 <StatusBtn closed={closed} name={`${index}-status`} index={index} product={item}
                     setProducts={setProducts}/>
