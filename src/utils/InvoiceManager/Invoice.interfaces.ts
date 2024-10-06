@@ -1,10 +1,12 @@
 export type ProductStatus = "Assembly" | "Assembled" | "Delivered"
 export type InvoiceType = "wholesale" | "retail"
+export type WarehouseType = "warehouse" | "shop"
 
 export interface ProductEntity {
     article: number
     title: string
     count: number
+    warehouse: WarehouseType
     status: ProductStatus
     history?: {
         title: string

@@ -43,7 +43,7 @@ export default function Product(
             if (lastProduct.article) {
                 return [
                     ...updatedProducts,
-                    {article: 0, title: "", count: 1, status: "Assembly"}
+                    {article: 0, title: "", count: 1, status: "Assembly", warehouse: "shop"}
                 ]
             }
 
@@ -103,6 +103,12 @@ export default function Product(
                     name={`${index}-count`}
                     value={item.count}
                     onChange={(e) => handleInputChange(index, "count", e.target.value)}/>
+            </td>
+            <td
+                className={styles.warehouse}
+                style={{backgroundColor: item.warehouse === "warehouse" ? "#1e90ff" : "#FF69B4"}}
+            >
+                {item.warehouse === "warehouse" ? "С" : "М"}
             </td>
             <td>
                 <StatusBtn closed={closed} name={`${index}-status`} index={index} product={item}

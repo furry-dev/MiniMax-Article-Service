@@ -42,8 +42,9 @@ export default function ProductsTable({
             <colgroup>
                 <col style={{width: "90px"}}/>
                 <col
-                    style={{width: `calc(${windowWidth > 880 ? "min(calc(100vw - 480px), 500px, 100vw)" : "100vw"} - 250px)`}}/>
-                <col style={{width: "60px"}}/>
+                    style={{width: `calc(${windowWidth > 880 ? "min(calc(100vw - 480px), 500px, 100vw)" : "100vw"} - 300px)`}}/>
+                <col style={{width: "70px"}}/>
+                <col style={{width: "40px"}}/>
                 <col style={{width: "100px"}}/>
             </colgroup>
 
@@ -52,6 +53,7 @@ export default function ProductsTable({
                     <th>Артикул</th>
                     <th>Назва</th>
                     <th>к-сть</th>
+                    <th title={"Склад"}>Скл</th>
                     <th>Статус</th>
                 </tr>
             </thead>
