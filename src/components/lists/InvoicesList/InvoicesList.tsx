@@ -7,7 +7,7 @@ import {useEffect, useRef, useState} from "react"
 import {InvoiceManager} from "@/utils/InvoiceManager/InvoiceManager"
 import Link from "next/link"
 import {useUser} from "@/context/UserContext"
-import {userIsCashbox, userIsWholesale} from "@/utils/userRoles"
+import {userIsAdmin, userIsCashbox, userIsDeveloper, userIsWholesale} from "@/utils/userRoles"
 
 const DEFAULT_PAGE_LIMIT = 20
 
@@ -39,7 +39,9 @@ export default function InvoicesList({type, closedAt, pageLimit}: {
         } else {
             let invoiceTypeFilter: InvoiceType | undefined = undefined
 
-            if (userIsCashbox(user)) {
+            if (userIsDeveloper(user) || userIsAdmin(user)) {
+                invoiceTypeFilter = undefined
+            } else if (userIsCashbox(user)) {
                 invoiceTypeFilter = "retail"
             } else if (userIsWholesale(user)) {
                 invoiceTypeFilter = "wholesale"
