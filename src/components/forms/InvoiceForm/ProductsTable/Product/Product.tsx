@@ -5,6 +5,7 @@ import {ProductEntity} from "@/utils/InvoiceManager/Invoice.interfaces"
 import {getProduct} from "@/utils/livesearch"
 import CountInput from "@/components/forms/InvoiceForm/ProductsTable/Product/CountInput/CountInput"
 import ArticleInput from "@/components/forms/InvoiceForm/ProductsTable/Product/ArticleInput/ArticleInput"
+import {useActiveProduct} from "@/context/ActiveArticleProductContext"
 
 interface ProductProps {
     index: number
@@ -27,6 +28,8 @@ export default function Product(
         invalid
     }: ProductProps
 ) {
+    const {setActiveProduct} = useActiveProduct()
+
     const handleInputChange = async (index: number, field: keyof ProductEntity, value: string | number) => {
         if (paid) return
 
@@ -83,6 +86,10 @@ export default function Product(
         }
     }
 
+    const onNameClickHandler = () => {
+        setActiveProduct({...item, index})
+    }
+
     return (
         <tr className={`${styles.product} ${invalid ? styles.invalid : ""}`}>
             <td>
@@ -94,7 +101,7 @@ export default function Product(
                     onChange={(e) => handleInputChange(index, "article", e.target.value)}
                 />
             </td>
-            <td className={styles.name}>
+            <td className={styles.name} onClick={onNameClickHandler}>
                 {item.title}
             </td>
             <td>
