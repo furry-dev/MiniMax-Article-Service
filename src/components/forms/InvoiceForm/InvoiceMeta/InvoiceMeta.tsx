@@ -54,7 +54,6 @@ export default function InvoiceMeta({invoice}: { invoice: InvoiceWithId }) {
                 <div className={styles.right}>
                     <select
                         name="type"
-                        className={styles.type}
                         value={invoice.invoiceType}
                         onChange={changeInvoiceTypeHandler}
                         disabled={Boolean(invoice.paidAt) || !userIsConsultant(user)}

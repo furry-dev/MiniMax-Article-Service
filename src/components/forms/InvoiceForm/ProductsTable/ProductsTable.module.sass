@@ -1,8 +1,16 @@
 .namesTable
-  border-collapse: collapse
+  border-collapse: separate
+  border-spacing: 0
   table-layout: auto
 
+  &:first-child
+    border-top: none
+
   .header
+    position: sticky
+    top: 0
+    background-color: #0a0b0b
+
     th
       padding: 5px
       border-bottom: 1px solid #3c4144
