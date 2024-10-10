@@ -36,16 +36,20 @@ export default function ArticleInput({tabulationOnEnter, containerRef, ...props}
         const target = e.target
 
         if (target instanceof HTMLInputElement && containerRef?.current) {
+            toast.success("Артикул скопійовано")
+
             const inputs = Array.from(containerRef.current.querySelectorAll("input[name$='-article']")) as HTMLInputElement[]
             const index = inputs.indexOf(target)
-            toast.success("Артикул скопійовано")
-            if (index < inputs.length - 1) {
-                inputs[index + 1].focus()
-            } else {
-                const button = document.getElementById("payInvoiceBtn") || document.getElementById("closeInvoiceBtn")
+            
+            setTimeout(() => {
+                if (index < inputs.length - 1) {
+                    inputs[index + 1].focus()
+                } else {
+                    const button = document.getElementById("payInvoiceBtn") || document.getElementById("closeInvoiceBtn")
 
-                if (button instanceof HTMLButtonElement) button.focus()
-            }
+                    if (button instanceof HTMLButtonElement) button.focus()
+                }
+            }, 100)
         }
     }
 
