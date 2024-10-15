@@ -60,6 +60,18 @@ export default function Navigation() {
                     )
                 }
                 {
+                    // (userIsConsultant(user))
+                    (userIsDeveloper(user))
+                    && (
+                        <li>
+                            <Link href={"/utils"} className={styles.navBtn}>
+                                <Image src={"/icons/utils.png"} alt={"utils"} width={32} height={32}/>
+                                Фічі
+                            </Link>
+                        </li>
+                    )
+                }
+                {
                     (userIsAdmin(user)) && (
                         <li>
                             <Link href={"/admin"} className={styles.navBtn}>
