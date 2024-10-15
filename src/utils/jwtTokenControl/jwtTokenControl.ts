@@ -8,12 +8,16 @@ const jwtConfig = {
 }
 
 export function createToken(user: UserEntityWithId) {
+    const now = new Date()
+    const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59)
+    const expiresIn = Math.floor((endOfDay.getTime() - now.getTime()) / 1000)
+
     return jwt.sign({
         uid: user.id,
         name: user.name,
         avatar: user.avatar,
         role: user.role
-    }, process.env.JWT_SECRET as string, {expiresIn: "1d"})
+    }, process.env.JWT_SECRET as string, {expiresIn: `${expiresIn}s`})
 }
 
 export async function decodeToken() {
