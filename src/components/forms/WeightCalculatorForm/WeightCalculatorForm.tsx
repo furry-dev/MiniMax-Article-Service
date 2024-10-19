@@ -6,10 +6,18 @@ const QUANTITY_BUTTONS = [10, 20, 50]
 
 export type WeightCalculatorMode = "weightToQuantity" | "quantityToWeight"
 
-export default function WeightCalculatorForm() {
-    const [mode, setMode] = useState<WeightCalculatorMode>("quantityToWeight")
+interface WeightCalculatorProps {
+    mode?: WeightCalculatorMode
+    itemCount?: number
+    setProductCount?: (count: number) => void
+}
+
+export default function WeightCalculatorForm(
+    {mode, itemCount, setProductCount}: WeightCalculatorProps
+) {
+    const [calcMode, setCalcMode] = useState<WeightCalculatorMode>(mode || "quantityToWeight")
     const [weight, setWeight] = useState(0)
-    const [count, setCount] = useState(100)
+    const [count, setCount] = useState(itemCount || 100)
     const [quantity, setQuantity] = useState(50)
     const [quantityWeight, setQuantityWeight] = useState(96)
 
@@ -59,22 +67,24 @@ export default function WeightCalculatorForm() {
 
     return (
         <form className={styles.calculator} ref={formRef}>
-            <div className={styles.modeSelect}>
-                <button
-                    className={`black-cyan ${mode === "quantityToWeight" ? "active" : ""}`}
-                    onClick={() => setMode("quantityToWeight")}
-                    type={"button"}
-                >
-                    QTW(вага)
-                </button>
-                <button
-                    className={`black-cyan ${mode === "weightToQuantity" ? "active" : ""}`}
-                    onClick={() => setMode("weightToQuantity")}
-                    type={"button"}
-                >
-                    WTQ(кількість)
-                </button>
-            </div>
+            {!mode && (
+                <div className={styles.modeSelect}>
+                    <button
+                        className={`black-cyan ${calcMode === "quantityToWeight" ? "active" : ""}`}
+                        onClick={() => setCalcMode("quantityToWeight")}
+                        type={"button"}
+                    >
+                        QTW(вага)
+                    </button>
+                    <button
+                        className={`black-cyan ${calcMode === "weightToQuantity" ? "active" : ""}`}
+                        onClick={() => setCalcMode("weightToQuantity")}
+                        type={"button"}
+                    >
+                        WTQ(кількість)
+                    </button>
+                </div>
+            )}
             <div className={styles.quantityButtons}>
                 {QUANTITY_BUTTONS.map(button => (
                     <button
@@ -95,7 +105,7 @@ export default function WeightCalculatorForm() {
                     onFocus={handleInputFocus}
                 />
             </label>
-            {mode === "quantityToWeight" ? (
+            {calcMode === "quantityToWeight" ? (
                 <>
                     <label>
                         <span>К-сть:</span>
@@ -120,8 +130,12 @@ export default function WeightCalculatorForm() {
                         />
                     </label>
                     <div className={styles.result}>
-                        К-сть({}): <span>{calculateQuantity().toFixed(2)}</span>
+                        К-сть({weight}г): <span>{calculateQuantity().toFixed(2)}</span>
                     </div>
+                    {setProductCount && (
+                        <button className={`lime-button ${styles.button}`} type={"button"}
+                            onClick={() => setProductCount(calculateQuantity())}>Встановити кількість</button>
+                    )}
                 </>
             )}
         </form>

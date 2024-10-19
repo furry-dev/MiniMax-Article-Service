@@ -1,11 +1,12 @@
-import React from "react"
+import React, {useState} from "react"
 import toast from "react-hot-toast"
 
 interface CountInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-    tabulationOnEnter: React.KeyboardEventHandler
+    tabulationOnEnter: React.KeyboardEventHandler,
+    onLongPress?: React.TouchEventHandler,
 }
 
-export default function CountInput({tabulationOnEnter, ...props}: CountInputProps) {
+export default function CountInput({tabulationOnEnter, onLongPress, ...props}: CountInputProps) {
     const handleCountKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
             tabulationOnEnter(e)
@@ -22,6 +23,22 @@ export default function CountInput({tabulationOnEnter, ...props}: CountInputProp
         e.target.select()
     }
 
+    const [pressTimer, setPressTimer] = useState<NodeJS.Timeout | null>(null)
+
+    const startPressTimer = (e: React.TouchEvent) => {
+        if (onLongPress) {
+            setPressTimer(setTimeout(() => {
+                onLongPress(e)
+            }, 500))
+        }
+    }
+
+    const clearPressTimer = () => {
+        if (pressTimer) {
+            clearTimeout(pressTimer)
+        }
+    }
+
     return (
         <input
             type="number"
@@ -30,6 +47,8 @@ export default function CountInput({tabulationOnEnter, ...props}: CountInputProp
             onKeyDown={handleCountKeyDown}
             onFocus={handleInputFocus}
             onCopy={onCopyHandler}
+            onTouchStart={startPressTimer}
+            onTouchEnd={clearPressTimer}
             {...props}
         />
     )

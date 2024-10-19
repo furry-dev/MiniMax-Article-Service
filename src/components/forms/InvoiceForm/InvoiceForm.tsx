@@ -10,6 +10,8 @@ import {useUser} from "@/context/UserContext"
 import {userIsConsultant} from "@/utils/userRoles"
 import ProductView from "@/components/forms/InvoiceForm/ProductView/ProductView"
 import {ActiveArticleProductProvider} from "@/context/ActiveArticleProductContext"
+import {ActiveCountMenuProductProvider} from "@/context/ActiveCountMenuProductContext"
+import ProductCountMenu from "@/components/forms/InvoiceForm/ProductCountMenu/ProductCountMenu"
 
 export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
     const [products, setProducts] = useState<ProductEntity[]>(invoice.products || [])
@@ -76,16 +78,19 @@ export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
 
 
     return (
-        <form className={styles.form} ref={formRef}>
-            <InvoiceMeta invoice={invoice}/>
-            <ActiveArticleProductProvider>
-                <ProductView setProducts={setProducts}/>
-                <div className={styles.tableContainer}>
-                    <ProductsTable invoice={invoice} products={products} setProducts={setProducts}
-                        invalidFields={invalidFields}/>
-                </div>
-            </ActiveArticleProductProvider>
-        </form>
+        <ActiveCountMenuProductProvider>
+            <ProductCountMenu setProducts={setProducts}/>
+            <form className={styles.form} ref={formRef}>
+                <InvoiceMeta invoice={invoice}/>
+                <ActiveArticleProductProvider>
+                    <ProductView setProducts={setProducts}/>
+                    <div className={styles.tableContainer}>
+                        <ProductsTable invoice={invoice} products={products} setProducts={setProducts}
+                            invalidFields={invalidFields}/>
+                    </div>
+                </ActiveArticleProductProvider>
+            </form>
+        </ActiveCountMenuProductProvider>
     )
 }
 
