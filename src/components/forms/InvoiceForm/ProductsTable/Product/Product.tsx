@@ -6,6 +6,7 @@ import {getProduct} from "@/utils/livesearch"
 import CountInput from "@/components/forms/InvoiceForm/ProductsTable/Product/CountInput/CountInput"
 import ArticleInput from "@/components/forms/InvoiceForm/ProductsTable/Product/ArticleInput/ArticleInput"
 import {useActiveProduct} from "@/context/ActiveArticleProductContext"
+import {useActiveCountMenuProduct} from "@/context/ActiveCountMenuProductContext"
 
 interface ProductProps {
     index: number
@@ -29,6 +30,7 @@ export default function Product(
     }: ProductProps
 ) {
     const {setActiveProduct} = useActiveProduct()
+    const {setActiveProduct: setMenuProduct} = useActiveCountMenuProduct()
 
     const handleInputChange = async (index: number, field: keyof ProductEntity, value: string | number) => {
         if (paid) return
@@ -90,6 +92,17 @@ export default function Product(
         setActiveProduct({...item, index})
     }
 
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+
+    const onCountContextMenuHandler = (e: React.MouseEvent<HTMLInputElement>) => {
+        e.preventDefault()
+        if (!isMobile) setMenuProduct({...item, index})
+    }
+
+    const onLongPressHandler = () => {
+        if (isMobile) setMenuProduct({...item, index})
+    }
+
     return (
         <tr className={`${styles.product} ${invalid ? styles.invalid : ""}`}>
             <td>
@@ -109,7 +122,10 @@ export default function Product(
                     tabulationOnEnter={tabulationOnEnter}
                     name={`${index}-count`}
                     value={item.count}
-                    onChange={(e) => handleInputChange(index, "count", e.target.value)}/>
+                    onChange={(e) => handleInputChange(index, "count", e.target.value)}
+                    onContextMenu={onCountContextMenuHandler}
+                    onLongPress={onLongPressHandler}
+                />
             </td>
             <td
                 className={styles.warehouse}

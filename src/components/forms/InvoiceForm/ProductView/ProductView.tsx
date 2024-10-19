@@ -11,18 +11,20 @@ export default function ProductView({setProducts}: { setProducts: React.Dispatch
     return (
         <>
             {activeProduct && (
-                <div className={styles.view}>
-                    <textarea
-                        cols={30}
-                        rows={3}
-                        value={activeProduct?.title}
-                        disabled={true}
-                    ></textarea>
-                    <label>
-                        Склад:
-                        <SelectWarehouse setProducts={setProducts}/>
-                    </label>
-                </div>
+                <>
+                    <div className={styles.view}>
+                        <textarea
+                            cols={25}
+                            rows={3}
+                            value={activeProduct?.title}
+                            disabled={true}
+                        ></textarea>
+                        <label>
+                            Склад:
+                            <SelectWarehouse setProducts={setProducts}/>
+                        </label>
+                    </div>
+                </>
             )}
         </>
     )
