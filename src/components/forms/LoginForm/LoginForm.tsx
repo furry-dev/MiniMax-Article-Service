@@ -38,13 +38,26 @@ export default function LoginForm() {
         })
     }
 
+    const defaultUser = localStorage.getItem("user")
+
+    const onUserChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        console.log(e.target.value)
+        if (e.target.value) {
+            localStorage.setItem("user", e.target.value)
+        }
+    }
+
     return (
         <form className={styles.form} onSubmit={onSubmitHandler}>
             <label>
                 Користувач:
-                <select name="uid">
-                    {users.map(user => <option key={user.id}
-                        value={user.id}>{user.name} ({USER_ROLES_DICT[user.role]})</option>)}
+                <select name="uid" onChange={onUserChange}>
+                    {users.map(user => (
+                        <option key={user.id} value={user.id} selected={user.id === defaultUser}
+                        >
+                            {user.name} ({USER_ROLES_DICT[user.role]})
+                        </option>
+                    ))}
                 </select>
             </label>
             <label>
