@@ -11,7 +11,7 @@ import {InvoiceManager} from "@/utils/InvoiceManager/InvoiceManager"
 import toast from "react-hot-toast"
 import {useRouter} from "next/navigation"
 import {useUser} from "@/context/UserContext"
-import {userIsCashbox, userIsConsultant, userIsWholesale} from "@/utils/userRoles"
+import {userIsCashbox, userIsConsultant, userIsWholesale, userIsWholesaleConsultant} from "@/utils/userRoles"
 import useConfirm from "@/components/base/ConfirmDialog/ConfirmDialog"
 import {STATUS_LIST} from "@/components/forms/InvoiceForm/ProductsTable/Product/StatusBtn/StatusBtn"
 
@@ -146,12 +146,13 @@ export default function Invoice({invoiceId}: { invoiceId?: string }) {
             <div className={`${styles.list} ${invoiceId ? styles.activeInvoice : ""}`}>
                 <h1>Виписки</h1>
                 <InvoicesList/>
-                {userIsConsultant(user) && <NewInvoiceBtn className={styles.addButton}/>}
+                {(userIsConsultant(user) || userIsWholesaleConsultant(user)) &&
+                    <NewInvoiceBtn className={styles.addButton}/>}
             </div>
             {invoiceId && (
                 <div className={styles.form}>
                     {invoice && <InvoiceForm invoice={invoice}/>}
-                    {(!invoice?.paidAt && (userIsCashbox(user) || userIsWholesale(user))) && (
+                    {(!invoice?.paidAt && (userIsCashbox(user) || userIsWholesale(user) || userIsWholesaleConsultant(user))) && (
                         <button
                             className={styles.closeInvoiceBtn}
                             onClick={payInvoiceHandler}
@@ -160,7 +161,7 @@ export default function Invoice({invoiceId}: { invoiceId?: string }) {
                             Сплатити список
                         </button>
                     )}
-                    {(invoice?.paidAt && !invoice?.closedAt && (userIsCashbox(user) || userIsWholesale(user) || userIsConsultant(user))) && (
+                    {(invoice?.paidAt && !invoice?.closedAt && (userIsCashbox(user) || userIsWholesale(user) || userIsConsultant(user) || (userIsWholesaleConsultant(user) && invoice?.invoiceType === "wholesale"))) && (
                         <button
                             className={styles.closeInvoiceBtn}
                             onClick={closeInvoiceHandler}

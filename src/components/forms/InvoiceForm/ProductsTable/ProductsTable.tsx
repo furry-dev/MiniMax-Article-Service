@@ -3,7 +3,7 @@ import React, {SetStateAction, useEffect, useRef, useState} from "react"
 import {InvoiceWithId, ProductEntity} from "@/utils/InvoiceManager/Invoice.interfaces"
 import Product from "@/components/forms/InvoiceForm/ProductsTable/Product/Product"
 import {useUser} from "@/context/UserContext"
-import {userIsConsultant} from "@/utils/userRoles"
+import {userIsConsultant, userIsWholesaleConsultant} from "@/utils/userRoles"
 
 interface ProductsTableProps {
     invoice: InvoiceWithId
@@ -63,8 +63,8 @@ export default function ProductsTable({
                         key={index}
                         item={item}
                         index={index}
-                        closed={Boolean(invoice.closedAt) || !userIsConsultant(user)}
-                        paid={Boolean(invoice.paidAt) || !userIsConsultant(user)}
+                        closed={Boolean(invoice.closedAt) || !(userIsConsultant(user) || userIsWholesaleConsultant(user))}
+                        paid={Boolean(invoice.paidAt) || !(userIsConsultant(user) || userIsWholesaleConsultant(user))}
                         containerRef={containerRef}
                         setProducts={setProducts}
                         invalid={invalidFields.includes(index)}
