@@ -5,7 +5,14 @@ import styles from "./Navigation.module.sass"
 import {useEffect, useRef} from "react"
 import Link from "next/link"
 import {useUser} from "@/context/UserContext"
-import {userIsAdmin, userIsCashbox, userIsConsultant, userIsDeveloper, userIsWholesale} from "@/utils/userRoles"
+import {
+    userIsAdmin,
+    userIsCashbox,
+    userIsConsultant,
+    userIsDeveloper,
+    userIsWholesale,
+    userIsWholesaleConsultant
+} from "@/utils/userRoles"
 
 export default function Navigation() {
     const navRef = useRef<HTMLElement | null>(null)
@@ -38,7 +45,7 @@ export default function Navigation() {
             <Image className={styles.logo} src={"/images/mini-max_logo.png"} alt={"logo"} width={69} height={51}/>
             <ul className={styles.links}>
                 {
-                    (userIsCashbox(user) || userIsWholesale(user) || userIsConsultant(user)) && (
+                    (userIsCashbox(user) || userIsWholesale(user) || userIsConsultant(user) || userIsWholesaleConsultant(user)) && (
                         <li>
                             <Link href={"/"} className={styles.navBtn}>
                                 <Image src={"/icons/invoice.png"} alt={"invoices"} width={32} height={32}/>
@@ -60,8 +67,7 @@ export default function Navigation() {
                     )
                 }
                 {
-                    // (userIsConsultant(user))
-                    (userIsDeveloper(user))
+                    (userIsConsultant(user) || userIsWholesaleConsultant(user))
                     && (
                         <li>
                             <Link href={"/utils"} className={styles.navBtn}>

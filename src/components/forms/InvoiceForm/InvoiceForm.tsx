@@ -7,7 +7,7 @@ import {InvoiceManager} from "@/utils/InvoiceManager/InvoiceManager"
 import InvoiceMeta from "@/components/forms/InvoiceForm/InvoiceMeta/InvoiceMeta"
 import ProductsTable from "@/components/forms/InvoiceForm/ProductsTable/ProductsTable"
 import {useUser} from "@/context/UserContext"
-import {userIsConsultant} from "@/utils/userRoles"
+import {userIsConsultant, userIsWholesaleConsultant} from "@/utils/userRoles"
 import ProductView from "@/components/forms/InvoiceForm/ProductView/ProductView"
 import {ActiveArticleProductProvider} from "@/context/ActiveArticleProductContext"
 import {ActiveCountMenuProductProvider} from "@/context/ActiveCountMenuProductContext"
@@ -22,7 +22,7 @@ export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
         if (!invoice.closedAt) {
             setProducts([
                 ...(invoice.products || []),
-                ...(userIsConsultant(user) ? [{
+                ...((userIsConsultant(user) || userIsWholesaleConsultant(user)) ? [{
                     article: 0,
                     title: "",
                     count: 1,
@@ -59,7 +59,7 @@ export default function InvoiceForm({invoice}: { invoice: InvoiceWithId }) {
     const [invalidFields, setInvalidFields] = useState<number[]>([])
 
     useEffect(() => {
-        if (invoice.closedAt || !userIsConsultant(user)) return
+        if (invoice.closedAt || !(userIsConsultant(user) || userIsWholesaleConsultant(user))) return
 
         const invalidIndexes: number[] = products
             .map((product, index) => (product.count < 1 ? index : -1))
