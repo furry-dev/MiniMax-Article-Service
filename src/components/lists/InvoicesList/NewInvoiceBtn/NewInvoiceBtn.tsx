@@ -5,7 +5,7 @@ import {InvoiceManager} from "@/utils/InvoiceManager/InvoiceManager"
 import {useRouter} from "next/navigation"
 import toast from "react-hot-toast"
 import {useUser} from "@/context/UserContext"
-import {userIsConsultant} from "@/utils/userRoles"
+import {userIsConsultant, userIsWholesaleConsultant} from "@/utils/userRoles"
 
 export default function NewInvoiceBtn({className}: { className?: string }) {
     const router = useRouter()
@@ -13,7 +13,7 @@ export default function NewInvoiceBtn({className}: { className?: string }) {
 
 
     const onClickHandler = () => {
-        if (!user || !userIsConsultant(user)) {
+        if (!user || !(userIsConsultant(user) || userIsWholesaleConsultant(user))) {
             toast.error("Нема доступу!")
             return router.push("/login")
         }

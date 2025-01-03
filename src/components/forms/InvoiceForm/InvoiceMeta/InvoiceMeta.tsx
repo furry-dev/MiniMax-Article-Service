@@ -7,7 +7,7 @@ import {GetUser} from "@/utils/UserManager/UserManager"
 import {USER_ROLES_DICT, UserEntity} from "@/utils/UserManager/User.interfaces"
 import {InvoiceManager} from "@/utils/InvoiceManager/InvoiceManager"
 import toast from "react-hot-toast"
-import {userIsConsultant} from "@/utils/userRoles"
+import {userIsConsultant, userIsWholesaleConsultant} from "@/utils/userRoles"
 import {useUser} from "@/context/UserContext"
 
 export default function InvoiceMeta({invoice}: { invoice: InvoiceWithId }) {
@@ -56,7 +56,7 @@ export default function InvoiceMeta({invoice}: { invoice: InvoiceWithId }) {
                         name="type"
                         value={invoice.invoiceType}
                         onChange={changeInvoiceTypeHandler}
-                        disabled={Boolean(invoice.paidAt) || !userIsConsultant(user)}
+                        disabled={Boolean(invoice.paidAt) || !(userIsConsultant(user) || userIsWholesaleConsultant(user))}
                     >
                         <option value="retail">Роздріб</option>
                         <option value="wholesale">Опт</option>

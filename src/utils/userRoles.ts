@@ -5,6 +5,11 @@ export function userIsConsultant(user: UserContextEntity | null): boolean {
     return role === "consultant" || role === "admin" || role === "developer"
 }
 
+export function userIsWholesaleConsultant(user: UserContextEntity | null): boolean {
+    const role = user?.role
+    return role === "wholesaleConsultant" || role === "admin" || role === "developer"
+}
+
 export function userIsCashbox(user: UserContextEntity | null): boolean {
     const role = user?.role
     return role === "cashbox" || role === "admin" || role === "developer"
